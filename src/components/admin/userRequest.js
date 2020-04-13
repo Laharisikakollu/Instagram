@@ -1,14 +1,11 @@
 import React, { Component } from 'react'
 import { Checkbox } from 'antd';
-import { connect } from "react-redux";
 import { Table } from 'reactstrap';
 class UserRequest extends Component {
     componentDidMount() {
         this.props.onGetRequests();
     }
-    componentDidUpdate(prevProps, prevState) {
-      
-    }
+    
 
     Accept = (e) => {
         let obj = {
@@ -67,25 +64,4 @@ class UserRequest extends Component {
         </div>);
     }
 }
-const mapDispatchToProps = dispatch => {
-    return {
-        onGetRequests: () =>
-            dispatch({
-                type: "GETREQUESTS"
-            }),
-        accept: (value) =>
-            dispatch({
-                type: "ACCEPT",
-                payload: value
-            }),
-        decline: (value) =>
-            dispatch({
-                type: "REJECT",
-                payload: value
-            })
-    }
-}
-const mapStateToProps = state => ({
-    requests: state.admin.requests,
-})
-export default connect(mapStateToProps, mapDispatchToProps)(UserRequest);
+export default UserRequest;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import SideDrawer from '../sidedrawer/sidedrawer';
 import Profile from '../user/profile';
-import { connect } from "react-redux";
 class UserPosts extends Component{
 
     constructor(props){
@@ -29,23 +28,4 @@ class UserPosts extends Component{
         )
     }
 }
-const mapStateToProps = state => ({
-    userName: state.user.userName,
-    userPosts: state.user.userPosts,
-})
-const mapDispatchToProps = dispatch => {
-    return {
-        getUserPosts: () =>
-            dispatch({
-                type: "GETUSERPOSTS",
-
-            }),
-            setUserName: (value) =>
-            dispatch({
-                type: "SETUSERNAME",
-                payload: value
-            }),
-
-    }
-}
-export default (connect(mapStateToProps, mapDispatchToProps)(UserPosts));
+ export default UserPosts;

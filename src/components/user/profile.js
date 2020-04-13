@@ -3,7 +3,8 @@ import {Container} from 'reactstrap';
 import { connect } from "react-redux";
 import SideDrawer from '../sidedrawer/sidedrawer';
 import { Upload, Button , message, Modal as AntModal,  Carousel,Card, Col, Row } from 'antd';
-import { DownloadOutlined ,HeartTwoTone,LikeOutlined} from '@ant-design/icons';
+import { DownloadOutlined ,HeartTwoTone,LikeOutlined,DeleteOutlined } from '@ant-design/icons';
+import UserInfo from './userInfo';
 
 const { Meta } = Card;
 function getBase64(file) {
@@ -22,6 +23,20 @@ class Profile extends Component{
         this.props.getUserPosts(this.props.userName);
     }
 
+    handleLikePost = async(e) => {
+        e.preventDefault();
+        console.log(e.target.id);
+        let obj = {
+            key: e.target.id,
+            postUserName:this.props.userName,
+            presentUser:this.props.userName,
+        }
+        await this.props.onLikePost(obj);
+        await this.props.getUserPosts(this.props.userName);
+    }
+  
+
+
     render() {
        
         return (
@@ -31,6 +46,7 @@ class Profile extends Component{
             <Container >
                 {/* <h1>{this.props.match.params.id}</h1> */}
                 <h1>{this.props.userName}</h1>
+                
             </Container>
             {this.props.userPosts ? (
                 <Container
@@ -43,17 +59,20 @@ class Profile extends Component{
                         textAlign: 'center',
                         alignItems:'center',
                         alignContent:'center',
-                        // maxHeight: '250px'
                     }}
                 >
+                    <div>
+                        <Row gutter={16}>
+                     <UserInfo from={"profile"} name={this.props.userName}></UserInfo>
                     {
                         this.props.userPosts.map((el, key) => {
                             return (<div>
                                 {/* <Carousel autoplay> */}
+                                <Col span={8}>
                                 <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
                                  actions={[
-                                    <LikeOutlined className="TwoTone" key="like" value={el.likeCounter} />,
-
+                                    <Button onClick={this.handleLikePost} id={key} type='primary' color="primary"><LikeOutlined className="TwoTone" key={key}/>{el.likeCounter.length}</Button>,
+                                    <Button onClick={() => {this.props.deletePost({key:key,userName:this.props.userName})}} ><DeleteOutlined /></Button>
                                   ]} >
                                     {console.log(el)}
                                     <Carousel autoplay>
@@ -74,8 +93,10 @@ class Profile extends Component{
                                     </Carousel>
                                     {console.log(el.description)}
                                     <Meta title={el.description} description="www.instagram.com" />
-                                    {/* <AntButton className="Twotone"><HeartTwoTone className="TwoTone"/></AntButton> */}
+                                   
                                 </Card>
+                                </Col>
+                             
 
                                 {/* </Carousel> */}
                             </div>
@@ -83,6 +104,8 @@ class Profile extends Component{
                             )
                         })
                     }
+                    </Row>
+                    </div>
                 </Container>
             ) : null}
         </div>
@@ -98,12 +121,24 @@ const mapDispatchToProps = dispatch => {
             type:"GETUSERPOSTS",
             payload:value
 
-        })
+        }),
+        deletePost:(value)=>
+        dispatch({
+            type:"DELETEPOST",
+            payload:value
+        }),
+        onLikePost: (value) =>
+            dispatch({
+                type: "LIKEUSERPOST",
+                payload: value,
+            }),
+        
     }
 }
 const mapStateToProps = state => ({
    
 userName:state.user.userName,
-userPosts:state.user.userPosts
+userPosts:state.user.userPosts,
+searchValue: state.user.searchValue,
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

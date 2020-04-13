@@ -120,17 +120,7 @@ const reducer = (state = initialState, action) => {
             
         }
 
-        // case "DELETEUSERS": {
-        //     let a2 = JSON.parse(localStorage.getItem("admin"))
-        //     return {
-        //         ...state,
-        //         localStorageData: JSON.parse(localStorage.getItem(state.userName)),
-        //         users: a2.users
-            
-        //     }
-            
-            
-        // }
+        
        
         
         default: return state;

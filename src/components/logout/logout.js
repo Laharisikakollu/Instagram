@@ -12,12 +12,12 @@ class Logout extends Component{
     }
     componentDidMount() {
         this.setState({ logout: false })
-        console.log("logout cdm")
+        
     }
     componentWillUnmount() {
-        console.log("cwum logout")
         this.setState({ logout: false })
     }
+    
     handleLogout = async (e) => {
         e.preventDefault();
         await localStorage.removeItem("role");
@@ -31,8 +31,6 @@ class Logout extends Component{
                     (<div>
                         {console.log("heloo")}
                         {window.location.href='/login'}
-                        {/* <Redirect to='/login' push={true}/> */}
-                        {/* <Route  exact component={Login} /> */}
                     </div>)
                     :
                     null

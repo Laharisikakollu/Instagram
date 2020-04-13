@@ -102,7 +102,7 @@ class Timeline extends Component{
         }
         handleSubmitNewPost = () => {
             if (this.state.newPostName === null || this.state.newPostName === "") {
-                alert("enter Valid stage name");
+                alert("enter Valid Post name");
                 return;
             }
             this.setState({
@@ -149,7 +149,7 @@ class Timeline extends Component{
                 <Button outline color="info" onClick={this.handleAddNewPostToggler}> Add new Post</Button>
                 <Modal isOpen={this.state.toggleAddNewPost} toggle={this.state.toggleAddNewPost} backdrop="static" >
 
-                    <ModalHeader toggle={this.state.toggleAddNewPost}>Add A NEW STAGE</ModalHeader>
+                    <ModalHeader toggle={this.state.toggleAddNewPost}>Add A NEW POST</ModalHeader>
                     <ModalBody>
                         <Form>
                             <FormGroup>
@@ -218,34 +218,6 @@ class Timeline extends Component{
             );
           }}
     
-const mapDispatchToProps = dispatch => {
-            return {
-               
-                uploadPost:(value)=>
-                dispatch({
-                    type:"UPLOADPOST",
-                    payload:value
-                }),
-
-                getUserPosts:(value)=>
-                dispatch({
-                    type:"GETUSERPOSTS",
-                    payload:value
-                }),
-                
-                uploadDescription: (value) =>
-                 dispatch({
-                type: "NEWDESCRIPTION",
-                payload: value
-            })
-            }
-        }
-const mapStateToProps = state => ({
-           
-    userName:state.user.userName,
-    userPosts:state.user.userPosts,
-    description: state.user.description
-})
-export default connect(mapStateToProps, mapDispatchToProps)(Timeline);
+export default Timeline;
         
 

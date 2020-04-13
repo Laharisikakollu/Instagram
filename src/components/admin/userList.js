@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Table } from 'reactstrap';
-import { connect } from "react-redux";
 import { BrowserRouter as Router, Route, Link, Switch, Redirect } from 'react-router-dom';
 import { Button } from 'antd';
-import UserPosts from './userPosts';
+import UserPosts from '../../containers/admin/userPosts';
 
 class UserList extends Component{
 
@@ -38,7 +37,7 @@ class UserList extends Component{
        
         return (
             <div>
-                {/* <Router> */}
+                
                 {!this.props.toggle ? (
                     <div>
                         <h1>User List</h1>
@@ -61,26 +60,11 @@ class UserList extends Component{
                     )}
 
 
-                {/* </Router> */}
+               
             </div>
         );
     }
 }
-const mapDispatchToProps = dispatch => {
-    return {
-        onGetUsers: () =>
-            dispatch({
-                type: "GETUSERS"
-            }),
-        onChangeToggle:()=>
-        dispatch({
-            type:"TOGGLEUSER"
-        })
-    }
-}
-const mapStateToProps = state => ({
-    users: state.admin.users,
-    toggle:state.admin.toggle
-})
-export default connect(mapStateToProps, mapDispatchToProps)(UserList);
+
+export default UserList;
 

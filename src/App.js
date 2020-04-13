@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import Signup from './components/Signup/Signup.js';
-import Login from './components/login/login';
+import Signup from './containers/Signup/signup';
+import Login from './containers/login/login';
 import Admin from './components/admin/admin';
 import UserPosts from './components/admin/userPosts';
 import {BrowserRouter as Router,Route,Switch} from 'react-router-dom';
-import userList from './components/admin/userList';
+import userList from './containers/admin/userList';
 import { Provider } from 'react-redux';
 import UserRequest from './components/admin/userRequest';
 import { createStore } from 'redux';
@@ -16,7 +16,7 @@ import UserSearch from './components/user/search';
 import reducer from './reducers/index';
 import AdminRouter from './Routes/adminRouter';
 import UserRouter from './Routes/userRouter';
-import SideDrawer from './components/sidedrawer/sidedrawer';
+import SideDrawer from './containers/sidedrawer/sidedrawer';
 import Logout from './components/logout/logout';
 const store = createStore(reducer);
 function App() {

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import {Container} from 'reactstrap';
 import { connect } from "react-redux";
-import SideDrawer from '../sidedrawer/sidedrawer';
 
-class Profile extends Component{
+class Home extends Component{
     // componentDidMount() {
     //     this.props.onGetUsers();
     // }
@@ -13,7 +12,6 @@ class Profile extends Component{
         return (<div>
          <Container>
              <h1>{this.props.match.params.id}</h1>
-             {/* <h1>{this.props.userName}</h1> */}
          </Container>
         </div>);
     }
@@ -33,5 +31,5 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => ({
    userName:state.user.userName
 })
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
 

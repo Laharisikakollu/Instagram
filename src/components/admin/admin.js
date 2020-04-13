@@ -1,9 +1,7 @@
 import React,{Component} from 'react';
-import{connect} from 'react-redux';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Menu, Button, Drawer } from 'antd';
-import UserList from './userList';
-import UserRequest from './userRequest';
+
 import {
     InstagramOutlined,
     UserOutlined,
@@ -69,51 +67,5 @@ class Admin extends Component{
     );
   }
 }
-const mapDispatchToProps = dispatch => {
-    // return {
-    //     onNameChange: (value) =>
-    //         dispatch({
-    //             type: "USERNAMECHANGE",
-    //             payload: value
-    //         }),
-    //     onPasswordChange: (value) =>
-    //         dispatch({
-    //             type: "PASSWORDCHANGE",
-    //             payload: value
-    //         }),
-    //     onLogout: () =>
-    //         dispatch({
-    //             type: "LOGOUT",
-    //         }),
-    //     getItem: () =>
-    //         dispatch({
-    //             type: "GET",
-    //             // payload: this.props.userName
-    //         }),
-    //     setItem: (obj) =>
-    //         dispatch({
-    //             type: "SET",
-    //             payload: obj
-    //         }),
-    //         setRole:(value)=>
-    //         dispatch({
-    //             type:"ROLE",
-    //             payload:value
-    //         }),
-    //         setPhone:(value)=>
-    //         dispatch({
-    //             type:"PHONE",
-    //             payload:value
-    //         }),
-    // };
-};
-const mapStateToProps = (state) => ({
-    // userName: state.signUp.userName,
-    // password: state.signUp.password,
-    // localStorageData: state.signUp.localStorageData,
-    // phone:state.signUp.phone,
-    // role:state.signUp.role,
-    // email:state.signUp.email,
-    // success:state.signUp.success
-})
-export default connect(mapStateToProps, mapDispatchToProps)(Admin);
+
+export default Admin;

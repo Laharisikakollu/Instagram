@@ -8,8 +8,8 @@ import { Upload, Button , message, Modal as AntModal, Carousel,Card, Col, Row } 
 import {Container} from 'reactstrap';
 import { Input } from 'antd';
 import Profile from './profile';
-
-import { DownloadOutlined ,HeartTwoTone,LikeOutlined} from '@ant-design/icons';
+import UserInfo from './userInfo';
+import { DownloadOutlined ,HeartTwoTone,LikeOutlined,UserAddOutlined} from '@ant-design/icons';
 const { Meta } = Card;
 const { Search } = Input;
 
@@ -28,34 +28,42 @@ class SearchPost extends Component{
             this.props.getUserPosts(this.state.searchValue);
         }
 
+        componentDidUpdate = async (prevProps, prevState) => {
+            if (prevProps.searchValue !== this.props.searchValue) {
+                await this.props.getUserPosts(this.props.searchValue);
+            }
+        }
 
-    newSearch = (e) => {
+
+    newSearch =async (e) => {
         e.preventDefault();
         this.setState({ searchValue: e.target.value });
+        await this.props.onNewSearch(e.target.value);
+        this.setState({ display: false })
     }
 
     handleSearch =async () => {
        
         await this.props.getUserPosts(this.state.searchValue);
+        await this.props.getUserPosts(this.props.searchValue);
         this.setState({
           display: true,
         });
 
-        
-        
-        // this.props.setUserName(this.state.searchValue)
-      this.props.getUserPosts(this.state.searchValue);
-    
-
-    //    this.setState({
-    //         fileList: [],
-    //         uploading: false,
-    //         // newPostName:null
-    //     });
-    //     message.success('upload successfully.');
 
     }
 
+    handleLikePost = async (e) => {
+        e.preventDefault();
+        console.log(e.target.id);
+        let obj = {
+            key: e.target.id,
+            postUserName: this.props.searchValue,
+            presentUser: this.props.userName,
+        }
+        await this.props.onLikePost(obj);
+        await this.props.getUserPosts(this.props.searchValue)
+    }
 
 
     
@@ -66,62 +74,75 @@ class SearchPost extends Component{
         
         
         <div>
-               <Input placeholder="Search user" onChange={this.newSearch}  />
-               <Button outline color="primary" onClick={this.handleSearch}>Done</Button>
-            {this.state.display ?  ( this.props.userPosts ? (
-                <Container
-                    style={{
-                        border: '2px solid black',
-                        overflowY: 'scroll',
-                        width: '70%',
-                        float: 'center',
-                        position: 'center',
-                        textAlign: 'center',
-                        alignItems:'center',
-                        alignContent:'center',
+              
+            {this.state.display ?  ( 
+                
+                
+
+                <div>
+
+             
+                                            
+                                            {this.props.userPosts ? (
+
+                
+                                                <Container
+                                                 style={{
+                                                 border: '2px solid black',
+                                                 overflowY: 'scroll',
+                                                 width: '70%',
+                                                 float: 'center',
+                                                 position: 'center',
+                                                 textAlign: 'center',
+                                                 alignItems:'center',
+                                                 alignContent:'center',
                         
-                    }}
-                >
-                    {
-                        this.props.userPosts.map((el, key) => {
-                            return (<div>
+                                                        }}
+                                                 >
+                                                      <UserInfo from={"search"} name={this.state.searchValue}></UserInfo>
+                                                   {
+                                                       this.props.userPosts.map((el, key) => {
+                                                        return (<div>
                                 
-                                <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
-                                 actions={[
-                                    <LikeOutlined className="TwoTone" key="like" value={el.likeCounter} />,
+                                                         <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
+                                                           actions={[
+                                                            <Button onClick={this.handleLikePost} id={key} type='primary' color="primary"><LikeOutlined className="TwoTone" key={key} />{el.likeCounter.length}</Button>,
 
-                                  ]} >
-                                    {console.log(el)}
-                                    <Carousel autoplay>
-                                        {
-                                            Object.keys(el).map((el2, key2) => {
-                                                if (el2 !== "description"&& el2!=="likeCount")
-                                                    return (
-                                                        <div>
-                                                            <img
-                                                                alt="example"
-                                                                src={`${el[el2].thumbUrl}`}
-                                                            />
+                                                                  ]} >
+                                                            {console.log(el)}
+                                                         <Carousel autoplay>
+                                                          {
+                                                              Object.keys(el).map((el2, key2) => {
+                                                              if (el2 !== "description"&& el2!=="likeCount")
+                                                             return (
+                                                             <div>
+                                                                <img
+                                                                 alt="example"
+                                                                 src={`${el[el2].thumbUrl}`}
+                                                              />
 
-                                                        </div>
-                                                    )
-                                            })
-                                        }
-                                    </Carousel>
-                                    {console.log(el.description)}
-                                    <Meta title={el.description} description="www.instagram.com" />
+                                                             </div>
+                                                                   )
+                                                                      })
+                                                          }
+                                                       </Carousel>
+                                                        {console.log(el.description)}
+                                                         <Meta title={el.description} description="www.instagram.com" />
                                    
-                                </Card>
-
+                                                       </Card>
+ 
                                 
-                            </div>
+                                                                 </div>
 
-                            )
-                        })
-                    }
-                </Container>
-            ) :  (<div>
-                User not found</div>)):null
+                                                                )
+                                                      })
+                                                   }
+                                               </Container>
+                                            ) : 
+            
+                                           (<div> User not found</div>) }</div>  ):<div> <Input placeholder="Search user"  value={this.searchValue} onChange={this.newSearch}  />
+                                                                                <Button outline color="primary" onClick={this.handleSearch}>Done</Button>
+                                                                                </div>
            }
        
         </div>);
@@ -131,6 +152,8 @@ class SearchPost extends Component{
 const mapStateToProps = state => ({
     userName: state.user.userName,
     userPosts: state.user.userPosts,
+    followRequests: state.user.followRequests,
+    searchValue: state.user.searchValue,
 })
 const mapDispatchToProps = dispatch => {
     return {
@@ -144,6 +167,16 @@ const mapDispatchToProps = dispatch => {
             dispatch({
                 type: "SETUSERNAME",
                 payload: value
+            }),
+            onLikePost: (value) =>
+            dispatch({
+                type: "LIKEUSERPOST",
+                payload: value,
+            }),
+            onNewSearch: (value) =>
+            dispatch({
+                type: "SEARCHUSERNAME",
+                payload: value,
             }),
 
     }

@@ -6,21 +6,27 @@ import {
   } from "react-router-dom";
 
 
-import { Menu, Button, Drawer } from 'antd';
-import { connect } from "react-redux";
+import { Menu, Button, Drawer,notification } from 'antd';
 import Logout from '../logout/logout';
-
-
 import {
-    InstagramOutlined,
-    UserOutlined,
+  InstagramOutlined,
+  UserOutlined,
+  ContainerOutlined,
+  MenuOutlined,
+  SmileOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  SearchOutlined,
+  FieldTimeOutlined,
+  UsergroupAddOutlined 
 } from '@ant-design/icons';
-import UserList from '../admin/userList';
-import UserRequest from '../admin/userRequest';
-import UserTimeline from '../user/timeline';
+import 'antd/dist/antd.css';
+import UserList from '../../containers/admin/userList';
+import UserRequest from '../../containers/admin/userRequest';
+import UserTimeline from '../../containers/user/timeline';
 import UserProfile from '../user/profile';
 import UserSearch from '../user/search';
-
+import FollowRequests from '../user/followRequest';
 
 class SideDrawer extends React.Component {
     
@@ -54,12 +60,51 @@ hideUserLinks = () => {
   
 }
 
+componentDidMount = async () => {
+  console.log(this.props.loggedUserName)
+  await this.props.setUserName(this.props.loggedUserName);
+  console.log(this.props.userName);
+  // console.log(this.props.loggedUserName)
+  // console.log(this.props.userName)
+  if (localStorage.getItem("role") === "user") {
+      await this.props.onGetFollowRequests(this.props.loggedUserName);
+      if (this.props.followRequests)
+
+          await this.props.followRequests.map(async (el, key) => {
+              return await this.sleep(2000).then(() =>
+                  notification.open({
+                      message: 'New follow Request  ',
+                      description:
+                          `from ${el}`,
+                      icon: <SmileOutlined style={{ color: '#308ee9' }} />,
+                  })
+              );
+
+          })
+  }
+  else {
+      await this.props.onGetSignUpRequests();
+      this.props.signUpRequests.map((el, key) => {
+          return (
+              notification.open({
+                  message: 'New Sign Up Request  ',
+                  description:
+                      `from ${el}`,
+              }))
+      })
+  }
+}
+
 
     render() {
         return (
             <div >
-                <Button type="primary" onClick={this.showDrawer} style={{marginRight:1300}}>
-          MENU
+                <Button type="primary" onClick={this.showDrawer} style={{marginRight:1800}}>
+                {
+                        this.props.toggle ?
+                            <MenuFoldOutlined /> :
+                            <MenuUnfoldOutlined />
+                    }
         </Button>
                 <Drawer
           title="Basic Drawer"
@@ -76,8 +121,9 @@ hideUserLinks = () => {
          (<div>
            
             <Link to={`/user/${this.props.signeduserName}/userProfile`}><InstagramOutlined />User Profile</Link><br></br><br></br><br></br>
-            <Link to={`/user/${this.props.signeduserName}/userTimeline`}><InstagramOutlined />User Timline</Link><br></br><br></br><br></br>
-            <Link to={`/user/${this.props.signeduserName}/userSearch`}><InstagramOutlined />User Search</Link>
+            <Link to={`/user/${this.props.signeduserName}/userTimeline`}><FieldTimeOutlined />User Timline</Link><br></br><br></br><br></br>
+            <Link to={`/user/${this.props.signeduserName}/userSearch`}><SearchOutlined />User Search</Link><br></br><br></br><br></br>
+            <Link to={`/user/${this.props.signedUserName}/followRequests`}><UsergroupAddOutlined />FollowRequests</Link>
             </div>)}
 
         </Drawer>
@@ -89,6 +135,8 @@ hideUserLinks = () => {
                         <Route path="/user/:id/userProfile"   component={UserProfile} ></Route>
                         <Route path="/user/:id/userTimeline" component={UserTimeline} ></Route>
                         <Route path="/user/:id/userSearch" component={UserSearch} ></Route>
+
+                        <Route path="/user/:id/followRequests" component={FollowRequests}></Route>
                         
                        
                             
@@ -98,17 +146,4 @@ hideUserLinks = () => {
         );
     }
 }
-const mapStateToProps = state => ({
-  users: state.admin.users,
-  toggle:state.admin.toggle,
-  signeduserName:state.login.userName
-})
-const mapDispatchToProps = dispatch => {
-  return {
-      onChangeToggle:()=>
-      dispatch({
-          type:"TOGGLEUSER"
-      })
-      
-}}
-export default (connect(mapStateToProps, mapDispatchToProps)(SideDrawer));
+export default SideDrawer;
