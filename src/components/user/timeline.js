@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { Container, Modal, ModalFooter, ModalHeader, ModalBody, Form, FormGroup, Label, Input, } from 'reactstrap';
 // import { Button } from 'reactstrap';
-import { Upload, Button , message, Modal as AntModal, Card, Col, Row } from 'antd';
+import { Upload, Button , message, Modal as AntModal, Card, Col, Row ,Carousel} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
-
-
+import { PlusOutlined, LoadingOutlined ,LikeOutlined} from '@ant-design/icons';
 import { connect } from "react-redux";
 const { Meta } = Card;
+const jwt=require('jsonwebtoken')
 
 function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -23,7 +22,7 @@ class Timeline extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            newPostName:null,
+            newPostName:'',
             toggleAddNewPost:false,
             fileList: [],
             uploading: false,
@@ -32,6 +31,11 @@ class Timeline extends Component{
             
 
           }}
+
+          componentWillMount(){
+            const payload=jwt.decode(JSON.parse(localStorage.getItem("token")))
+            this.props.getfollowerposts(payload.userName)
+          }
           
           componentDidMount() {
             this.props.getUserPosts(this.props.userName);
@@ -67,18 +71,14 @@ class Timeline extends Component{
               uploading: true,
             });
 
-            
-
-            console.log(this.state.newPostName)
-            console.log("hi")
             await this.props.uploadDescription(this.state.newPostName);    
-            await this.props.uploadPost(fileList);
-            await this.props.getUserPosts(this.props.userName);
+            await this.props.uploadPost({fileList,description:this.props.description});
+            // await this.props.getUserPosts(this.props.userName);
 
             await this.setState({
                 fileList: [],
                 uploading: false,
-                // newPostName:null
+                newPostName:null
             });
             message.success('upload successfully.');
     
@@ -101,14 +101,24 @@ class Timeline extends Component{
             })
         }
         handleSubmitNewPost = () => {
-            if (this.state.newPostName === null || this.state.newPostName === "") {
-                alert("enter Valid Post name");
-                return;
-            }
+            
             this.setState({
                 toggleAddNewPost: !this.state.toggleAddNewPost,
             })
         }
+
+        handleLikePost = async(e) => {
+          // e.preventDefault();
+          // console.log(e.target.id);
+          let payload=jwt.decode(JSON.parse(localStorage.getItem("token")))
+          console.log(payload.id)
+          let obj = {
+              postId:e,
+              userId:payload.id
+          }
+          await this.props.onLikePost(obj);
+          await this.props.getUserPosts(this.props.userName);
+      }
            
             
         
@@ -149,7 +159,7 @@ class Timeline extends Component{
                 <Button outline color="info" onClick={this.handleAddNewPostToggler}> Add new Post</Button>
                 <Modal isOpen={this.state.toggleAddNewPost} toggle={this.state.toggleAddNewPost} backdrop="static" >
 
-                    <ModalHeader toggle={this.state.toggleAddNewPost}>Add A NEW POST</ModalHeader>
+                    <ModalHeader toggle={()=>this.state.toggleAddNewPost}>Add A NEW POST</ModalHeader>
                     <ModalBody>
                         <Form>
                             <FormGroup>
@@ -185,35 +195,55 @@ class Timeline extends Component{
                         </ModalFooter>
                     </Modal>
                 </Container>
+                <br></br>
 
-                {/* {this.props.userPosts ? (
-                    <Container>
-                        {this.props.userPosts.map((post,key) =>{
-                        return (
+                {console.log(this.props.followingPosts)}
+                {this.props.followingPosts?(
+                  
+                this.props.followingPosts.map((el, key) => {
+                            return (<Container  style={{marginLeft:"850px"}}>
+                               <div> 
+                                
+                                  {/* <Container> */}
+                                <Col span={8}>
+                                <Card hoverable bordered={true} style={{ width: 240 }}
+                                 actions={[
+                                    <Button onClick={()=>this.handleLikePost(el.id)} id={el.id} type='primary' color="primary"><LikeOutlined className="TwoTone" key={key}/>{el.likes}</Button>,
+                                   
+                                  ]} >
+                                    {console.log("hi")}
+                                    {console.log(el)}
+                                    <Carousel autoplay>
+                                        {
+                                            (el.images).map((el2, key2) => {
+                                                // if (el2 !== "description" && el2!=="likeCounter")
+                                                    return (
+                                                        <div>
+                                                            <img
+                                                                alt="example"
+                                                                src={`${el2}`}
+                                                            />
 
-                    <Row >
+                                                        </div>
+                                                    )
+                                            })
+                                        }
+                                    </Carousel>
+                                    {console.log(el.description)}
+                                    <Meta title={el.description} description="www.instagram.com" />
+                                   
+                                </Card>
+                                <br></br>
+                                </Col>
+                             
 
-                        <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }} >
+                            </div>
 
-                            <img
-                                alt="example"
-                                src={`${post.thumbUrl}`}
-                            />
+                            </Container>
 
 
-                            <Meta title={`${post.name}`} description="www.instagram.com" />
-                        </Card>
-
-                        <br></br>
-                        <br></br>
-                       
-                    </Row>
-
-                )
-                 })
-                }
-            </Container>
-                ):null} */}
+                            )
+                        })):null}
                 </div>
             );
           }}

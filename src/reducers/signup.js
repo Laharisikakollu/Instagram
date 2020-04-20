@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const initialState = {
     userName: '',
     password: '',
@@ -94,19 +95,19 @@ const reducer = (state = initialState, action) => {
                 localStorageData: JSON.parse(localStorage.getItem(state.userName))
             }
         }
-        case "SET": {
-            if(state.role === "user")
-            {
-                let a1=JSON.parse(localStorage.getItem("admin"))
-                a1.requests.push(state.userName)
-                localStorage.setItem("admin", JSON.stringify(a1))
-            }
+        // case "SET": {
+        //     if(state.role === "user")
+        //     {
+        //         let a1=JSON.parse(localStorage.getItem("admin"))
+        //         a1.requests.push(state.userName)
+        //         localStorage.setItem("admin", JSON.stringify(a1))
+        //     }
            
-            return {
-                ...state,
-                localStorageData: localStorage.setItem(state.userName, JSON.stringify(action.payload))
-            }
-        }
+        //     return {
+        //         ...state,
+        //         localStorageData: localStorage.setItem(state.userName, JSON.stringify(action.payload))
+        //     }
+        // }
         case "EMAIL": {
 
             let success="warning"
@@ -153,8 +154,10 @@ const reducer = (state = initialState, action) => {
         }
         case "ROLE": {
 
+            // let role=jwt.decode(JSON.parse(localStorage.getItem("token")))
+            // console.log(role)
             let success="warning"
-            console.log("we")
+           
             state.role=action.payload
             console.log(state.role)
             if (!state.role) {

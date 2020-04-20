@@ -50,11 +50,15 @@ const reducer = (state = initialState, action) => {
             }
         }
         case "GETREQUESTS": {
-            let a1 = JSON.parse(localStorage.getItem("admin"))
+            // let a1 = JSON.parse(localStorage.getItem("admin"))
+            // return {
+            //     ...state,
+            //     localStorageData: JSON.parse(localStorage.getItem(state.userName)),
+            //     requests: a1.requests
+            // }
+            state.requests = action.payload
             return {
-                ...state,
-                localStorageData: JSON.parse(localStorage.getItem(state.userName)),
-                requests: a1.requests
+                ...state
             }
         }
 
@@ -70,51 +74,63 @@ const reducer = (state = initialState, action) => {
         
         case "ACCEPT": {
            
-            let l = JSON.parse(localStorage.getItem("admin"));
-            if (action.payload.value === true) {
-                let l2=l.requests.splice(action.payload.index, 1);
-                let l3=JSON.parse(localStorage.getItem(l2[0]))
-                l3.accept=true;
-                localStorage.setItem(l2[0],JSON.stringify(l3))
-                console.log(l2)
-                l.users=(l.users.concat(l2))
-                console.log(l.users);
-                localStorage.setItem("admin",JSON.stringify(l))
-                return {
-                    ...state,
-                    localStorageData: l,
-                }
-            }
+            // let l = JSON.parse(localStorage.getItem("admin"));
+            // if (action.payload.value === true) {
+            //     let l2=l.requests.splice(action.payload.index, 1);
+            //     let l3=JSON.parse(localStorage.getItem(l2[0]))
+            //     l3.accept=true;
+            //     localStorage.setItem(l2[0],JSON.stringify(l3))
+            //     console.log(l2)
+            //     l.users=(l.users.concat(l2))
+            //     console.log(l.users);
+            //     localStorage.setItem("admin",JSON.stringify(l))
+            //     return {
+            //         ...state,
+            //         localStorageData: l,
+            //     }
+            // }
+            // return {
+            //     ...state,
+            //     localStorageData:l
+            // }
+
             return {
                 ...state,
-                localStorageData:l
             }
         }
 
         case "REJECT": {
-            let l = JSON.parse(localStorage.getItem("admin"));
-            if (action.payload.value === true) {
+            // let l = JSON.parse(localStorage.getItem("admin"));
+            // if (action.payload.value === true) {
                 
-                l.requests.splice(action.payload.index, 1);
-                localStorage.setItem("admin",JSON.stringify(l))
-                return {
-                    ...state,
-                    localStorageData: l,
-                }
-            }
+            //     l.requests.splice(action.payload.index, 1);
+            //     localStorage.setItem("admin",JSON.stringify(l))
+            //     return {
+            //         ...state,
+            //         localStorageData: l,
+            //     }
+            // }
+            // return {
+            //     ...state,
+            //     localStorageData:l
+            // }
             return {
                 ...state,
-                localStorageData:l
             }
         }
 
         case "GETUSERS": {
-            let a2 = JSON.parse(localStorage.getItem("admin"))
+            // let a2 = JSON.parse(localStorage.getItem("admin"))
+            // return {
+            //     ...state,
+            //     localStorageData: JSON.parse(localStorage.getItem(state.userName)),
+            //     users: a2.users
+            
+            // }
+            console.log(action.payload)
+            state.users=action.payload
             return {
                 ...state,
-                localStorageData: JSON.parse(localStorage.getItem(state.userName)),
-                users: a2.users
-            
             }
             
             

@@ -8,17 +8,19 @@ class UserRequest extends Component {
     
 
     Accept = (e) => {
+       
         let obj = {
-            index: e.target.id,
+            userName: e.target.id,
             value: e.target.checked
         }
 
+        console.log(obj.value)
         this.props.accept(obj);
         this.props.onGetRequests();
     }
     Reject = (e) => {
         let obj = {
-            index: e.target.id,
+            userName: e.target.id,
             value: e.target.checked
         }
 
@@ -44,14 +46,16 @@ class UserRequest extends Component {
                     </tr>
                 </thead>
                 <tbody>
+                {console.log(this.props.requests)}
                     {
+                        
                         this.props.requests ? (
                             this.props.requests.map((el, key) => {
                                 return (
                                     <tr>
                                        <td>{el}</td>
-                                        <td><Checkbox onChange={this.Accept} id={key}></Checkbox></td>
-                                        <td><Checkbox onChange={this.Reject} id={key}></Checkbox></td>
+                                        <td><Checkbox onChange={this.Accept} id={el}></Checkbox></td>
+                                        <td><Checkbox onChange={this.Reject} id={el}></Checkbox></td>
                                         
                                         
                                     </tr>

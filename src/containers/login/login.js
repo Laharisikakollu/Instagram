@@ -1,6 +1,6 @@
 import Login from '../../components/login/login';
 import { connect } from "react-redux";
-
+import axios from "axios";
 const mapDispatchToProps = dispatch => {
     return {
         onNameChange: (value) =>
@@ -13,15 +13,28 @@ const mapDispatchToProps = dispatch => {
                 type: "PASSWORDCHANGE",
                 payload: value
             }),
-            onSubmit:()=>
+            onSubmit:async (userName,password)=>{
+            let res = await axios.post('http://localhost:8000/login', {
+                userName:userName,
+                password:password
+            })
+            console.log(res.data)
             dispatch({
-                type:"SUBMIT"
-            }),
+                type:"SUBMIT",
+                payload:res.data
+            })},
+
             setUserName: (value) =>
             dispatch({
-                type: "SETUSERNAME",
+                type: "SET",
                 payload: value
-            })
+            }),
+            setUserUserName: (value) => {
+                dispatch({
+                    type: "SETUSERUSERNAME",
+                    payload: value
+                })
+            },
             
   }
     };

@@ -1,6 +1,6 @@
 import SignUp from '../../components/Signup/Signup';
 import { connect } from "react-redux";
-
+import axios from "axios";
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -23,11 +23,16 @@ const mapDispatchToProps = dispatch => {
                 type: "GET",
                 // payload: this.props.userName
             }),
-        setItem: (obj) =>
-            dispatch({
-                type: "SET",
-                payload: obj
-            }),
+        setItem: async (obj) =>
+           
+            {
+              let res=await axios.post('http://localhost:8000/signup',obj)
+              console.log(res.data)
+               dispatch({
+                type: "SUBMIT",
+                payload: res.data
+            })}
+            ,
         validate: () =>
             dispatch({
                 type: "VALIDATE",

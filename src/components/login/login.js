@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Checkbox, Switch } from 'antd';
 import { Redirect } from 'react-router';
+import './login.css';
 class Login extends Component {
     componentDidMount() {
 
@@ -10,7 +11,7 @@ class Login extends Component {
     }
     onFinish = async(values) => {
         
-        await this.props.onSubmit();
+        await this.props.onSubmit(this.props.userName,this.props.password);
         if(!this.props.uSuccess){
             alert("Username does not exist");
             return;
@@ -25,6 +26,10 @@ class Login extends Component {
         }
         alert("Successfully Logged in");
         this.props.setUserName(this.props.userName);
+        console.log(this.props.role)
+        if (this.props.role === "user") {
+            this.props.setUserUserName(this.props.userName);
+        }
       
     };
 
@@ -55,7 +60,11 @@ class Login extends Component {
             },
         };
         return (
-            <div>
+
+            <div >
+                {console.log(this.props.role)}
+                {console.log(this.props.userName)}
+                {console.log(this.props.success)}
             {this.props.success ? (
                 this.props.role === "admin" ?
                     (
@@ -63,7 +72,7 @@ class Login extends Component {
                     )
                     :
                     (    
-                        <Redirect to="/user"></Redirect>
+                        <Redirect to={`/user/${this.props.userName}`}></Redirect>
                     )
                     
             ) : (
@@ -77,7 +86,7 @@ class Login extends Component {
             }}
             >
 
-                <Form
+                <Form 
                     {...layout}
                     name="basic"
                     initialValues={{
@@ -86,7 +95,9 @@ class Login extends Component {
                     onFinish={this.onFinish}
                     onFinishFailed={this.onFinishFailed}
                 >
-                    <h1>Sign In</h1>
+                    <div  className="insta-icon"></div>
+                    <h1 className="h1" >LOG IN</h1>
+                    
                     <Form.Item
                         onChange={this.handleNameChange}
                         label="Username"

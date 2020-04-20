@@ -2,7 +2,7 @@ import React from 'react';
 import "antd/dist/antd.css";
 import { Button } from 'antd';
 import {Link} from 'react-router-dom';
-
+import './signup.css';
 import { SmileOutlined } from '@ant-design/icons';
 import { Form, Input, DatePicker, TimePicker, Select, Cascader, InputNumber } from 'antd';
 import { Menu, Dropdown } from 'antd';
@@ -24,41 +24,48 @@ class SignUp extends React.Component {
         this.props.onPasswordChange(e.target.value)
     }
     handleSubmit = async () => {
+      let obj={}
         if ((this.props.userName !== null || this.props.userName !== "" ) && (this.props.password !== null || this.props.password!=="")) {
-            let obj = {
-                username:this.props.username,
+          console.log(this.props.role)
+          if(this.props.role==="admin")
+          {
+            obj = {
+                userName:this.props.userName,
                 password: this.props.password,
                 email:this.props.email,
                 phone: this.props.phone,
                 role:this.props.role,
-                posts:[],
-                followers:[],
-                following:[],
-                accept:false,
-                followRequests:[],
+                // posts:[],
+                // followers:[],
+                // following:[],
+                isaccept:null
+                // followRequests:[],
              }
             await this.props.validate();
+            this.props.setItem(obj)
            
             if(!this.props.success){
                 alert("Not valid User");
                 return;
             }
 
-            await this.props.getItem();
-            if (!this.props.localStorageData && this.props.role!=="admin") {
-                this.props.setItem(obj)
-            }
-
+            // await this.props.getItem();
+            // if (!this.props.localStorageData && this.props.role!=="admin") {
+            //     this.props.setItem(obj)
+            // }
+          }
             else{
                 obj={
-                    username:this.props.username,
+                    userName:this.props.userName,
                     password: this.props.password,
                     email:this.props.email,
                     phone: this.props.phone,
                     role:this.props.role,
-                    users:[],
-                    requests:[]
+                    isaccept:false
+                    // users:[],
+                    // requests:[]
                 }
+                await this.props.validate();
                 this.props.setItem(obj)
             }
 
@@ -124,7 +131,7 @@ class SignUp extends React.Component {
                     
 
 <Form {...formItemLayout}>
-    <h1>Sign Up</h1>
+    <h1 className="h1">Sign Up</h1>
     <Form.Item
       onChange={this.handleChange}
       label="Username"
@@ -185,9 +192,9 @@ class SignUp extends React.Component {
  </Form.Item>
 
     <Form.Item>
-    <Button onClick={this.handleSubmit} type="primary" size="middle">signUp</Button><br></br><br></br>
+    <Button className="signup" onClick={this.handleSubmit} type="primary" size="middle">SignUp</Button><br></br><br></br>
                            
-                                <Link to="/login">Already have an account</Link> 
+                                <Link to="/login" className="link">Already have an account</Link> 
                                 </Form.Item>
     </Form>
                         

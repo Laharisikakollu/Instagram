@@ -18,7 +18,8 @@ import {
   MenuUnfoldOutlined,
   SearchOutlined,
   FieldTimeOutlined,
-  UsergroupAddOutlined 
+  UsergroupAddOutlined,
+  BellOutlined
 } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import UserList from '../../containers/admin/userList';
@@ -60,14 +61,18 @@ hideUserLinks = () => {
   
 }
 
+sleep = async (time) => {
+  await new Promise((resolve) => { setTimeout(resolve, time) })
+}
+
 componentDidMount = async () => {
-  console.log(this.props.loggedUserName)
-  await this.props.setUserName(this.props.loggedUserName);
+  console.log(this.props.signeduserName)
+  await this.props.setUserName(this.props.signeduserName);
   console.log(this.props.userName);
-  // console.log(this.props.loggedUserName)
+  // console.log(this.props.signedUserName)
   // console.log(this.props.userName)
   if (localStorage.getItem("role") === "user") {
-      await this.props.onGetFollowRequests(this.props.loggedUserName);
+      await this.props.onGetFollowRequests(this.props.signeduserName);
       if (this.props.followRequests)
 
           await this.props.followRequests.map(async (el, key) => {
@@ -76,23 +81,29 @@ componentDidMount = async () => {
                       message: 'New follow Request  ',
                       description:
                           `from ${el}`,
-                      icon: <SmileOutlined style={{ color: '#308ee9' }} />,
+                      icon: <BellOutlined style={{ color: '#308ee9' }} />,
                   })
               );
 
-          })
+          }
+          
+          )
   }
   else {
-      await this.props.onGetSignUpRequests();
-      this.props.signUpRequests.map((el, key) => {
-          return (
-              notification.open({
-                  message: 'New Sign Up Request  ',
-                  description:
-                      `from ${el}`,
-              }))
-      })
-  }
+    await this.props.onGetSignUpRequests();
+    console.log(this.props.signUpRequests)
+    if (this.props.signUpRequests) {
+        console.log(this.props.signUpRequests)
+        this.props.signUpRequests.map((el, key) => {
+            return (
+                notification.open({
+                    message: 'New Sign Up Request  ',
+                    description:
+                        `from ${el["userName"]}`,
+                }))
+        })
+    }
+}
 }
 
 
@@ -113,7 +124,7 @@ componentDidMount = async () => {
           onClose={this.onClose}
           visible={this.state.visible}
         >
-            {localStorage.getItem("role") === "admin" ?
+            {this.props.role=== "admin" ?
          (
          <div><Link to="/admin/userList"  onClick={this.hideUserLinks}><InstagramOutlined />UserLists</Link><br></br><br></br><br></br>
          <Link to="/admin/userRequest"><UserOutlined />User Requests</Link></div>)
@@ -123,7 +134,7 @@ componentDidMount = async () => {
             <Link to={`/user/${this.props.signeduserName}/userProfile`}><InstagramOutlined />User Profile</Link><br></br><br></br><br></br>
             <Link to={`/user/${this.props.signeduserName}/userTimeline`}><FieldTimeOutlined />User Timline</Link><br></br><br></br><br></br>
             <Link to={`/user/${this.props.signeduserName}/userSearch`}><SearchOutlined />User Search</Link><br></br><br></br><br></br>
-            <Link to={`/user/${this.props.signedUserName}/followRequests`}><UsergroupAddOutlined />FollowRequests</Link>
+            <Link to={`/user/${this.props.signeduserName}/followRequests`}><UsergroupAddOutlined />FollowRequests</Link>
             </div>)}
 
         </Drawer>
