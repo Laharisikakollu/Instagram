@@ -5,15 +5,20 @@ import { Table } from 'reactstrap';
 import axios from "axios";
 const jwt=require('jsonwebtoken');
 class FollowRequests extends Component {
+
+    componentWillMount(){
+        this.props.onGetFollowRequests(this.props.userName);
+    }
     componentDidMount() {
         this.props.onGetFollowRequests(this.props.userName);
     }
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps.followRequests !== this.props.followRequests) {
-        }
-    }
+    // componentDidUpdate(prevProps, prevState) {
+    //     if (prevProps.followRequests !== this.props.followRequests) {
+    //         this.props.onGetFollowRequests(this.props.userName);
+    //     }
+    // }
 
-    onAcceptChange = (e) => {
+    onAcceptChange =async (e) => {
         console.log(`checked = ${e.target.checked}`);
         console.log(e.target.id)
         console.log(e.target.checked)
@@ -22,17 +27,18 @@ class FollowRequests extends Component {
             accept: e.target.checked
         }
 
-        this.props.accept(obj);
-        this.props.onGetFollowRequests(this.props.userName);
+        await this.props.accept(obj);
+        await this.props.onGetFollowRequests(this.props.userName);
     }
-    onDeclineChange = (e) => {
+    onDeclineChange = async (e) => {
+        console.log(e.target.checked)
         let obj = {
             acceptingName: e.target.id,
             accept: e.target.checked
         }
 
-        this.props.decline(obj);
-        this.props.onGetFollowRequests(this.props.userName);
+        await this.props.decline(obj);
+        await this.props.onGetFollowRequests(this.props.userName);
 
         console.log(e.target.id)
     }
@@ -93,7 +99,8 @@ const mapDispatchToProps = dispatch => {
         decline: async(value) =>
         {
         value={...value,token:JSON.parse(localStorage.getItem("token"))}
-        let res=await axios.post(`http://localhost:8000/acceptfollowrequest`,value)
+        console.log(value)
+        let res=await axios.post(`http://localhost:8000/declinefollowrequest`,value)
             dispatch({
                 type: "DECLINEFOLLOW",
                 payload: res.data

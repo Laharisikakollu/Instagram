@@ -28,7 +28,7 @@ import UserTimeline from '../../containers/user/timeline';
 import UserProfile from '../user/profile';
 import UserSearch from '../user/search';
 import FollowRequests from '../user/followRequest';
-
+const jwt=require('jsonwebtoken')
 class SideDrawer extends React.Component {
     
 
@@ -64,6 +64,11 @@ hideUserLinks = () => {
 sleep = async (time) => {
   await new Promise((resolve) => { setTimeout(resolve, time) })
 }
+async componentWillMount()
+{
+  let payload=jwt.decode(JSON.parse(localStorage.getItem("token"))) 
+  await this.props.setUserName(payload.userName);
+}
 
 componentDidMount = async () => {
   console.log(this.props.signeduserName)
@@ -72,6 +77,7 @@ componentDidMount = async () => {
   // console.log(this.props.signedUserName)
   // console.log(this.props.userName)
   if (localStorage.getItem("role") === "user") {
+    console.log(this.props.signeduserName)
       await this.props.onGetFollowRequests(this.props.signeduserName);
       if (this.props.followRequests)
 
@@ -99,7 +105,7 @@ componentDidMount = async () => {
                 notification.open({
                     message: 'New Sign Up Request  ',
                     description:
-                        `from ${el["userName"]}`,
+                        `from ${el}`,
                 }))
         })
     }

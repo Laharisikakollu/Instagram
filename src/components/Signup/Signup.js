@@ -38,7 +38,7 @@ class SignUp extends React.Component {
                 // posts:[],
                 // followers:[],
                 // following:[],
-                isaccept:null
+                isaccept:true
                 // followRequests:[],
              }
             await this.props.validate();
@@ -61,7 +61,7 @@ class SignUp extends React.Component {
                     email:this.props.email,
                     phone: this.props.phone,
                     role:this.props.role,
-                    isaccept:false
+                    isaccept:null
                     // users:[],
                     // requests:[]
                 }

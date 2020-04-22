@@ -3,9 +3,11 @@ import { Container, Modal, ModalFooter, ModalHeader, ModalBody, Form, FormGroup,
 // import { Button } from 'reactstrap';
 import { Upload, Button , message, Modal as AntModal, Card, Col, Row ,Carousel} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { PlusOutlined, LoadingOutlined ,LikeOutlined} from '@ant-design/icons';
+import { PlusOutlined, LoadingOutlined ,LikeOutlined,CommentOutlined} from '@ant-design/icons';
 import { connect } from "react-redux";
+import { Pagination } from 'antd';
 const { Meta } = Card;
+const { TextArea } = Input;
 const jwt=require('jsonwebtoken')
 
 function getBase64(file) {
@@ -28,7 +30,11 @@ class Timeline extends Component{
             uploading: false,
             previewImage:'',
             previewVisible: false,
-            
+            current:1,
+            visible:false,
+            comment:'',
+            visiblecomment:false,
+            postId:''
 
           }}
 
@@ -37,9 +43,9 @@ class Timeline extends Component{
             this.props.getfollowerposts(payload.userName)
           }
           
-          componentDidMount() {
-            this.props.getUserPosts(this.props.userName);
-        }
+        //   componentDidMount() {
+        //     this.props.getUserPosts(this.props.userName);
+        // }
 
         handlePreview = async file => {
             if (!file.url && !file.preview) {
@@ -117,10 +123,61 @@ class Timeline extends Component{
               userId:payload.id
           }
           await this.props.onLikePost(obj);
-          await this.props.getUserPosts(this.props.userName);
+          // await this.props.getUserPosts(this.props.userName);
       }
+
+      showModal = (e) => {
+        this.setState({
+          visible: true,
+          postId:e
+        });
+        
+      };
+
+      showComments = (e) => {
+        this.setState({
+          visiblecomment: true,
+        });
+        this.props.getComment(e)
+      };
+    
+      handleOk = e => {
+        console.log(e);
+        this.setState({
+          visible: false,
+        });
+        let obj={
+          token:JSON.parse(localStorage.getItem("token")),
+          postId:this.state.postId,
+          comment:this.state.comment
+        }
+        this.props.addComment(obj);
+      };
+    
+      handleCancel = e => {
+        console.log(e);
+        this.setState({
+          visible: false,
+        });
+      };
+
+      Cancel = e => {
+        console.log(e);
+        this.setState({
+          visiblecomment: false,
+        });
+      };
+
+
+      commentHandler = (e) => {
+        e.preventDefault();
+        this.setState({ comment: e.target.value });
+    }
+
+     
            
-            
+     
+   
         
           render() 
           {
@@ -183,6 +240,25 @@ class Timeline extends Component{
                   {uploading ? 'Uploading' : 'Start Upload'}
                 </Button>
 
+                <Modal show={this.state.modal} handleClose={e => this.modalClose(e)}>
+          <h2>Hello Modal</h2>
+          <div className="form-group">
+            <label>Enter Name:</label>
+            <input
+              type="text"
+              value={this.state.modalInputName}
+              name="modalInputName"
+              onChange={e => this.handleChange(e)}
+              className="form-control"
+            />
+          </div>
+          <div className="form-group">
+            <button onClick={e => this.handleSubmit(e)} type="button">
+              Save
+            </button>
+          </div>
+        </Modal>
+
                 <AntModal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
                         <img alt="example" style={{ width: '100%' }} src={previewImage} />
                 </AntModal>
@@ -193,26 +269,55 @@ class Timeline extends Component{
                             <Button outline color="primary" onClick={this.handleSubmitNewPost}>Done</Button>
                             <Button outline color="secondary" onClick={this.handleNotSubmit}>Cancel</Button>
                         </ModalFooter>
+
+                       
                     </Modal>
+
                 </Container>
                 <br></br>
+
+                
 
                 {console.log(this.props.followingPosts)}
                 {this.props.followingPosts?(
                   
                 this.props.followingPosts.map((el, key) => {
                             return (<Container  style={{marginLeft:"850px"}}>
+                             
                                <div> 
                                 
                                   {/* <Container> */}
+
+
+                   
                                 <Col span={8}>
                                 <Card hoverable bordered={true} style={{ width: 240 }}
                                  actions={[
                                     <Button onClick={()=>this.handleLikePost(el.id)} id={el.id} type='primary' color="primary"><LikeOutlined className="TwoTone" key={key}/>{el.likes}</Button>,
-                                   
-                                  ]} >
+                                    <Button onClick={()=>this.showModal(el.id)}><CommentOutlined /></Button>,
+                                    <Button onClick={()=>this.showComments(el.id)}><PlusOutlined /></Button>
+                                    ]} >
+                                      
+                                      <AntModal title="Add Comment" visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleCancel}>
+                                         <Input type="text" value={this.state.comment} onChange={this.commentHandler} placeholder="Add comment"></Input>
+          
+                                    </AntModal>
+
+                                    <AntModal title="Comments" visible={this.state.visiblecomment}  onCancel={this.Cancel}>
+                                    {console.log(this.props.comment)}
+                                          {this.props.comment.map(item => {
+                                            return <li>
+                                              <b>{item.name}</b>
+                                             <i>{item.comment}</i>
+                                             {/* {console.log(comment,"hey comment")} */}
+                                            </li>
+                                          })}
+                                    </AntModal>
+                                    
                                     {console.log("hi")}
                                     {console.log(el)}
+
+                                  
                                     <Carousel autoplay>
                                         {
                                             (el.images).map((el2, key2) => {
@@ -223,6 +328,7 @@ class Timeline extends Component{
                                                                 alt="example"
                                                                 src={`${el2}`}
                                                             />
+                  
 
                                                         </div>
                                                     )
@@ -231,6 +337,7 @@ class Timeline extends Component{
                                     </Carousel>
                                     {console.log(el.description)}
                                     <Meta title={el.description} description="www.instagram.com" />
+                                   
                                    
                                 </Card>
                                 <br></br>

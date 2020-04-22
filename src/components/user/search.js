@@ -44,6 +44,12 @@ class SearchPost extends Component {
     this.props.getUserPosts(this.state.searchValue);
   }
 
+  async componentWillMount()
+{
+  let payload=jwt.decode(JSON.parse(localStorage.getItem("token"))) 
+  await this.props.setUserName(payload.userName);
+}
+
   componentDidUpdate = async (prevProps, prevState) => {
     if (prevProps.searchValue !== this.props.searchValue) {
       await this.props.getUserPosts(this.props.searchValue);
@@ -182,22 +188,15 @@ const mapDispatchToProps = (dispatch) => {
         
        console.log(value)
 
-        await axios.get(`http://localhost:8000/getPosts/${value}`)
-            .then((res) => {
-                console.log(res)
+        {const res=await axios.get(`http://localhost:8000/getPosts/${value}`)
+                 console.log(res)
                 if (res.data.success) {
                     dispatch({
                         type: "GETUSERPOSTS",
                         payload: res.data.posts1
-                    })
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-                message.error("error")
-            })
-
-    },
+                    })}
+        
+    }},
     setUserName: (value) =>
       dispatch({
         type: "SETUSERNAME",

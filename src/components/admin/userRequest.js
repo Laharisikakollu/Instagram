@@ -2,12 +2,24 @@ import React, { Component } from 'react'
 import { Checkbox } from 'antd';
 import { Table } from 'reactstrap';
 class UserRequest extends Component {
-    componentDidMount() {
-        this.props.onGetRequests();
-    }
+    async componentWillMount() {
+        await this.props.onGetRequests();
+        console.log("hbhjbbhbh")
     
+        console.log(this.props.requests)
+    }
 
-    Accept = (e) => {
+    componentDidUpdate(prevProps, prevState) {
+        console.log(prevProps.requests)
+        console.log(this.props.requests)
+        console.log(prevState)
+        // if (prevProps.requests !== this.props.requests) {
+        //     this.props.onGetRequests();
+        // }
+    }
+
+
+    Accept =async (e) => {
        
         let obj = {
             userName: e.target.id,
@@ -15,17 +27,18 @@ class UserRequest extends Component {
         }
 
         console.log(obj.value)
-        this.props.accept(obj);
-        this.props.onGetRequests();
+        await this.props.accept(obj);
+        await this.props.onGetRequests();
     }
-    Reject = (e) => {
+
+    Reject = async(e) => {
         let obj = {
             userName: e.target.id,
             value: e.target.checked
         }
 
-        this.props.decline(obj);
-        this.props.onGetRequests();
+        await this.props.decline(obj);
+        await this.props.onGetRequests();
 
         
     }

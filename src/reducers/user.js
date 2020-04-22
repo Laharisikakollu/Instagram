@@ -8,7 +8,8 @@ const initialState = {
     searchValue: '',
     likeCounter: '',
     followRequests:'',
-    followingPosts:''
+    followingPosts:'',
+    comment:[]
     
 }
 
@@ -38,12 +39,11 @@ const reducer = (state = initialState, action) => {
         //     userPosts: state.userPosts,
         //     userName: state.userName,
         // }
-console.log(action.payload
-    
-    )
-        state.userPosts = action.payload;
+        console.log(action.payload)
+        // state.userPosts = action.payload;
             return {
                 ...state,
+                userPosts: action.payload,
 
             }
     }
@@ -134,47 +134,47 @@ console.log(action.payload
 
     case "ACCEPTFOLLOW": {
        
-        let l = JSON.parse(localStorage.getItem(state.userName));
-        if (action.payload.value === true) {
+        // let l = JSON.parse(localStorage.getItem(state.userName));
+        // if (action.payload.value === true) {
           
-            let l2 = l.followRequests.splice(action.payload.index, 1);
-            console.log(l.followRequests)
+        //     let l2 = l.followRequests.splice(action.payload.index, 1);
+        //     console.log(l.followRequests)
 
-            l.followers = (l.followers.concat(l2))
-            console.log(l.users);
-            let l3 = JSON.parse(localStorage.getItem(l2[0]))
-            l3.following.push(state.userName);
-            localStorage.setItem(state.userName, JSON.stringify(l))
-            localStorage.setItem(l2[0], JSON.stringify(l3))
-            state.localStorageData = l;
-            state.followRequests = l.followRequests;
-            state.followers = l.followers
-            return {
-                ...state,
-                localStorageData: l,
-            }
-        }
+        //     l.followers = (l.followers.concat(l2))
+        //     console.log(l.users);
+        //     let l3 = JSON.parse(localStorage.getItem(l2[0]))
+        //     l3.following.push(state.userName);
+        //     localStorage.setItem(state.userName, JSON.stringify(l))
+        //     localStorage.setItem(l2[0], JSON.stringify(l3))
+        //     state.localStorageData = l;
+        //     state.followRequests = l.followRequests;
+        //     state.followers = l.followers
+        //     return {
+        //         ...state,
+        //         localStorageData: l,
+        //     }
+        // }
         return {
             ...state,
-            localStorageData: l
+            // localStorageData: l
         }
     }
     case "DECLINEFOLLOW": {
-        let l = JSON.parse(localStorage.getItem(state.userName));
-        if (action.payload.value === true) {
-            console.log("entered decline if")
-            let l2 = l.followRequests.splice(action.payload.index, 1);
-            localStorage.setItem(state.userName, JSON.stringify(l))
-            state.followRequests = l.followRequests;
-            state.followers = l.followers
-            return {
-                ...state,
-                localStorageData: l,
-            }
-        }
+        // let l = JSON.parse(localStorage.getItem(state.userName));
+        // if (action.payload.value === true) {
+        //     console.log("entered decline if")
+        //     let l2 = l.followRequests.splice(action.payload.index, 1);
+        //     localStorage.setItem(state.userName, JSON.stringify(l))
+        //     state.followRequests = l.followRequests;
+        //     state.followers = l.followers
+        //     return {
+        //         ...state,
+        //         localStorageData: l,
+        //     }
+        // }
         return {
             ...state,
-            localStorageData: l
+            // localStorageData: l
         }
     }
 
@@ -258,6 +258,23 @@ console.log(action.payload
             ...state,
             followingPosts:action.payload.posts1
         }
+    }
+
+    case "ADDCOMMENT": {
+
+        return {
+            ...state,
+        }
+    }
+
+    case "GETCOMMENT": {
+
+        console.log(action.payload,"payload")
+        return {
+            ...state,
+            comment:action.payload
+        }
+
     }
 
         

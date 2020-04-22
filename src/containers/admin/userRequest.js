@@ -13,10 +13,13 @@ const mapDispatchToProps = dispatch => {
         accept:async (data) =>
       
         {   console.log(data)
+            const payload=JSON.parse(localStorage.getItem("token"))
+            console.log(payload)
             let res=await axios.put('http://localhost:8000/acceptrequest',{
 
             userName:data.userName,
-            isaccept:data.value
+            isaccept:data.value,
+            token:JSON.parse(localStorage.getItem("token"))
         })
             dispatch({
                 type: "ACCEPT",

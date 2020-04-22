@@ -37,7 +37,6 @@ class UserInfo extends Component {
 
       await this.props.getUserFollowersAndFollowing(e);
       await this.handleUpdatingMenu();
-      console.log("click", e);
     }
   };
   handleUpdatingMenu = async () => {
@@ -78,12 +77,22 @@ class UserInfo extends Component {
       ),
     });
   };
-  componentDidMount = async () => {
-    await this.props.getUserFollowersAndFollowing(this.props.name);
+  componentWillMount = async () => {
+    let str=window.location.pathname
+    let username=''
+    console.log( str.substring(str.length - 10, str.length))
+    if( str.substring(str.length - 10, str.length)==="userSearch")
+   {username=this.props.name}
+   else{
+    let payload=jwt.decode(JSON.parse(localStorage.getItem("token"))) 
+    username=payload.userName}
+ 
+    await this.props.getUserFollowersAndFollowing(username);
     await this.handleUpdatingMenu();
     await this.props.onGetFollowRequests(this.props.searchValue);
   };
   componentDidUpdate = async (prevProps, prevState) => {
+    console.log("this.props.name",this.props.name)
     if (prevProps.name !== this.props.name) {
       await this.props.getUserFollowersAndFollowing(this.props.name);
       await this.handleUpdatingMenu();
@@ -96,7 +105,8 @@ class UserInfo extends Component {
     await this.props.onGetFollowRequests(this.props.searchValue);
     if (
       !this.props.followRequests.find(
-        (element) => element === this.props.userName
+        (element) => element === (jwt.decode(JSON.parse(localStorage.getItem("token"))).userName)
+        // (element) => element === this.props.userName)
       )
     )
       await this.props.followAndUnFollow(myName);
@@ -157,21 +167,24 @@ class UserInfo extends Component {
                     Following <DownOutlined />
                   </Button>
                 </Dropdown>
-
+              {console.log("usrn",jwt.decode(JSON.parse(localStorage.getItem("token"))).userName)}
                 {this.props.from === "search" &&
-                this.props.userName !== this.props.searchValue ? (
+               (jwt.decode(JSON.parse(localStorage.getItem("token"))).userName) !== this.props.searchValue ? (
                   <Button
                     style={{ marginTop: 16 }}
                     type="primary"
                     onClick={() => this.handleFollow(this.props.searchValue)}
                   >
+                    {console.log(this.props.followers,"followers")}
+                    {console.log(this.props.followRequests,"followrequests")}
+                    {console.log(this.props.userName,"usernammee")}
                     {this.props.followers.find(
-                      (element) => element === this.props.userName
+                      (element) => element ===  (jwt.decode(JSON.parse(localStorage.getItem("token"))).userName)
                     ) ? (
                       "Unfolow"
                     ) : this.props.followRequests ? (
                       this.props.followRequests.find(
-                        (element) => element === this.props.userName
+                        (element) => element === (jwt.decode(JSON.parse(localStorage.getItem("token"))).userName)
                       ) ? (
                         "Requested"
                       ) : (
@@ -204,6 +217,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     getUserFollowersAndFollowing: async (value) => {
+      console.log(value,"followersandfollowing")
       let res = await axios.get(
         `http://localhost:8000/fetchfollowers/${value}`
       );

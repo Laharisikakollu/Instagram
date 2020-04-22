@@ -44,15 +44,44 @@ const mapDispatchToProps = dispatch => {
                 payload: value,
             })},
 
-        getUserPosts:async (value)=>
+            addComment: async(value) =>
+            {
+               
+                let res=await axios.post(`http://localhost:8000/addComment`,value)
+                    
+                    console.log(res)
+                
+            
+                dispatch({
+                    type: "ADDCOMMENT",
+                    payload: value,
+                })},
+
+                 getComment: async(value) =>
+                 {
+               
+                    console.log("comm",value)
+                    let res=await axios.get(`http://localhost:8000/getComment/${value}`)
+                    
+                    console.log(res.data,"point")
+                
+            
+                dispatch({
+                    type: "GETCOMMENT",
+                    payload: res.data.names,
+                })},
+        
+
+        // getUserPosts:async (value)=>
        
-        dispatch({
-            type:"GETUSERPOSTS",
-            payload:value
-        }),
+        // dispatch({
+        //     type:"GETUSERPOSTS",
+        //     payload:value
+        // }),
 
         getfollowerposts:async(value)=>
         {
+
             let res=await axios.get(`http://localhost:8000/timeline/${value}` )
             console.log(res.data)
         dispatch({
@@ -73,6 +102,7 @@ const mapStateToProps = state => ({
 userName:state.user.userName,
 userPosts:state.user.userPosts,
 description: state.user.description,
-followingPosts:state.user.followingPosts
+followingPosts:state.user.followingPosts,
+comment:state.user.comment
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Timeline);

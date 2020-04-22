@@ -21,8 +21,10 @@ function getBase64(file) {
 class Profile extends Component{
 
    
-    componentDidMount() {
-        this.props.getUserPosts(this.props.userName);
+    async componentWillMount() {
+        console.log(this.props.userName)
+        await this.props.getUserPosts(this.props.userName);
+        console.log(this.props.userPosts)
     }
 
     // componentDidUpdate(prevState,prevProps) {
@@ -145,8 +147,8 @@ const mapDispatchToProps = dispatch => {
             else{
                 userName=payload.userName
             console.log(payload.userName)}
-            await axios.get(`http://localhost:8000/getPosts/${userName}`)
-                .then((res) => {
+            {let res=await axios.get(`http://localhost:8000/getPosts/${userName}`)
+                // .then((res) => {
                     console.log(res)
                     if (res.data.success) {
                         dispatch({
@@ -154,11 +156,11 @@ const mapDispatchToProps = dispatch => {
                             payload: res.data.posts1
                         })
                     }
-                })
-                .catch((err) => {
-                    console.log(err);
-                    message.error("error")
-                })
+                }
+                // .catch((err) => {
+                //     console.log(err);
+                //     message.error("error")
+                // })
 
         },
         deletePost:async(value)=>
@@ -190,3 +192,4 @@ userPosts:state.user.userPosts,
 searchValue: state.user.searchValue,
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+
