@@ -1,71 +1,115 @@
-import SignUp from '../../components/Signup/Signup';
+import SignUp from "../../components/Signup/Signup";
 import { connect } from "react-redux";
 import axios from "axios";
+import {setItem} from '../../services/signup';
 
-const mapDispatchToProps = dispatch => {
-    return {
-        onNameChange: (value) =>
-            dispatch({
-                type: "USERNAMECHANGE",
-                payload: value
-            }),
-        onPasswordChange: (value) =>
-            dispatch({
-                type: "PASSWORDCHANGE",
-                payload: value
-            }),
-        onLogout: () =>
-            dispatch({
-                type: "LOGOUT",
-            }),
-        getItem: () =>
-            dispatch({
-                type: "GET",
-                // payload: this.props.userName
-            }),
-        setItem: async (obj) =>
-           
-            {
-              let res=await axios.post('http://localhost:8000/signup',obj)
-              console.log(res.data)
-               dispatch({
-                type: "SUBMIT",
-                payload: res.data
-            })}
-            ,
-        validate: () =>
-            dispatch({
-                type: "VALIDATE",
-            }),
-            setEmail:(value)=>
-            dispatch({
-                type:"EMAIL",
-                payload:value
-            }),
-            setRole:(value)=>
-            dispatch({
-                type:"ROLE",
-                payload:value
-            }),
-            setPhone:(value)=>
-            dispatch({
-                type:"PHONE",
-                payload:value
-            }),
-    };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onNameChange: (value) => {
+      let success = "success";
+      if (
+        value.length < 4 ||
+        value.length > 30 ||
+        !/^[A-Z0-9_-]{3,30}$/i.test(value)
+      ) {
+        success = "warning";
+      }
+      dispatch({
+        type: "USERNAMECHANGE",
+        payload: {
+          userName: value,
+          success: success,
+        },
+      });
+    },
+
+    onPasswordChange: (value) => {
+      let success = "success";
+      if (!value || value.length < 8) {
+        success = "warning";
+      }
+      dispatch({
+        type: "PASSWORDCHANGE",
+        payload: {
+          password: value,
+          success: success,
+        },
+      });
+    },
+
+    onLogout: () =>
+      dispatch({
+        type: "LOGOUT",
+      }),
+
+    getItem: () =>
+      dispatch({
+        type: "GET",
+      }),
+
+    setItem: async (obj) => {
+      let set=await setItem(obj)
+      dispatch({
+        type: "SUBMIT",
+        payload:set,
+      });
+    },
+    
+    setEmail: (value) => {
+      let success = "success";
+      if (!value || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+        success = "warning";
+      }
+      dispatch({
+        type: "EMAIL",
+        payload: {
+          email: value,
+          success: success,
+        },
+      });
+    },
+
+    setRole: (value) => {
+      let success = "success";
+      if (!value) {
+        success = "warning";
+      }
+      dispatch({
+        type: "ROLE",
+        payload: {
+          role: value,
+          success: success,
+        },
+      });
+    },
+
+    setPhone: (value) => {
+      let success = "success";
+      if (!/^\d{10}$/.test(value)) {
+        success = "warning";
+      }
+      dispatch({
+        type: "PHONE",
+        payload: {
+          phone: value,
+          success: success,
+        },
+      });
+    },
+  };
 };
 const mapStateToProps = (state) => ({
-    userName: state.signUp.userName,
-    password: state.signUp.password,
-    localStorageData: state.signUp.localStorageData,
-    phone:state.signUp.phone,
-    role:state.signUp.role,
-    email:state.signUp.email,
-    success:state.signUp.success,
-    userNameValidated:state.signUp.userNameValidated,
-    passwordValidated:state.signUp.passwordValidated,
-    emailValidated:state.signUp.emailValidated,
-    phoneValidated:state.signUp.phoneValidated,
-    roleValidated:state.signUp.roleValidated
-})
+  userName: state.signUp.userName,
+  password: state.signUp.password,
+  localStorageData: state.signUp.localStorageData,
+  phone: state.signUp.phone,
+  role: state.signUp.role,
+  email: state.signUp.email,
+  success: state.signUp.success,
+  userNameValidated: state.signUp.userNameValidated,
+  passwordValidated: state.signUp.passwordValidated,
+  emailValidated: state.signUp.emailValidated,
+  phoneValidated: state.signUp.phoneValidated,
+  roleValidated: state.signUp.roleValidated,
+});
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

@@ -1,44 +1,38 @@
 import { connect } from "react-redux";
-import UserRequest from '../../components/admin/userRequest';
+import UserRequest from "../../components/admin/userRequest";
 import axios from "axios";
-const mapDispatchToProps = dispatch => {
-    return {
-        onGetRequests:async () =>
-        {let res=await axios.get('http://localhost:8000/getrequestlist')
-            dispatch({
-                type: "GETREQUESTS",
-                payload:res.data.names
-            })},
+import {onGetRequests} from '../../services/admin';
+import {accept} from '../../services/admin';
+import {decline} from '../../services/admin';
 
-        accept:async (data) =>
-      
-        {   console.log(data)
-            const payload=JSON.parse(localStorage.getItem("token"))
-            console.log(payload)
-            let res=await axios.put('http://localhost:8000/acceptrequest',{
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onGetRequests: async () => {
+    let getRequests=await onGetRequests()
+      dispatch({
+        type: "GETREQUESTS",
+        payload: getRequests,
+      });
+    },
 
-            userName:data.userName,
-            isaccept:data.value,
-            token:JSON.parse(localStorage.getItem("token"))
-        })
-            dispatch({
-                type: "ACCEPT",
-                payload: res.data
-            })},
+    accept: async (data) => {
+     let accepts=await accept(data)
+      dispatch({
+        type: "ACCEPT",
+        payload: accepts,
+      });
+    },
 
-        decline:async (data) =>
-        {let res=await axios.put('http://localhost:8000/declinerequest',{
-            userName:data.userName,
-            isaccept:data.value
-        })
-            dispatch({
-                type: "REJECT",
-                payload: data
-            })}
-    }
-}
-const mapStateToProps = state => ({
-    requests: state.admin.requests,
-})
+    decline: async (data) => {
+      let declines=await decline(data)
+      dispatch({
+        type: "REJECT",
+        payload: declines,
+      });
+    },
+  };
+};
+const mapStateToProps = (state) => ({
+  requests: state.admin.requests,
+});
 export default connect(mapStateToProps, mapDispatchToProps)(UserRequest);
-
