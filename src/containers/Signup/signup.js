@@ -1,6 +1,5 @@
 import SignUp from "../../components/Signup/Signup";
 import { connect } from "react-redux";
-import axios from "axios";
 import {setItem} from '../../services/signup';
 
 const mapDispatchToProps = (dispatch) => {

@@ -5,8 +5,9 @@ export const onGetFollowRequests = async (value) => {
   try {
     let payload = jwt.decode(JSON.parse(localStorage.getItem("token")));
     let res = await axios.get(
-      `http://localhost:8000/getfollowrequest/${payload.userName}`
+      `http://localhost:8000/getfollowrequest/${value}`
     );
+    
     return res.data;
   } catch (err) {
     return false;
@@ -68,7 +69,7 @@ export const getUserPosts = async (value) => {
 
 export const deletePost = async (value) => {
   try {
-    await axios.post(`http://localhost:8000/deletePost`, { postId: value });
+    await axios.post(`http://localhost:8000/deletePost`,  value );
     return value;
   } catch (err) {
     return false;
@@ -144,7 +145,6 @@ export const getUserFollowersAndFollowing=async (value) => {
   else {
     userName = payload.userName;
   }
-  console.log(userName)
   let res = await axios.get(
     `http://localhost:8000/fetchfollowers/${userName}`
   )

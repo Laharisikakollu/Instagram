@@ -1,6 +1,5 @@
 import UserList from "../../components/admin/userList";
 import { connect } from "react-redux";
-import axios from "axios";
 import {onGetUsers} from '../../services/admin';
 
 const mapDispatchToProps = (dispatch) => {

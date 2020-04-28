@@ -11,27 +11,25 @@ import {
   Card,
   Col,
   Row,
+  notification
 } from "antd";
 import {
-  DownloadOutlined,
-  HeartTwoTone,
   LikeOutlined,
   DeleteOutlined,
+  BellOutlined 
 } from "@ant-design/icons";
 import UserInfo from "../../containers/user/userInfo";
 const jwt = require("jsonwebtoken");
 
 const { Meta } = Card;
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-}
-
 class Profile extends Component {
+
+
+
+  componentDidMount() {
+   this.props.getUserPosts(this.props.userName);
+  }
+
   async componentWillMount() {
     await this.props.getUserPosts(this.props.userName);
   }
@@ -45,6 +43,13 @@ class Profile extends Component {
     await this.props.onLikePost(obj);
     await this.props.getUserPosts(this.props.userName);
   };
+
+  handleDeletePost = async (e) => {
+    await this.props.deletePost({postId:e});
+    await this.props.getUserPosts(this.props.userName);
+  };
+
+  
 
   render() {
     return (
@@ -94,7 +99,10 @@ class Profile extends Component {
                               {el.likes}
                             </Button>,
                             <Button
-                              onClick={() => this.props.deletePost(el.id)}
+                              onClick={() => this.handleDeletePost(el.id)}
+                              id={el.id}
+                              type="primary"
+                              color="primary"
                             >
                               <DeleteOutlined />
                             </Button>,

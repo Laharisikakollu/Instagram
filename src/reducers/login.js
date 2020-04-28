@@ -1,5 +1,3 @@
-import { JsonWebTokenError } from "jsonwebtoken";
-
 const initialState = {
   userName: "",
   password: "",

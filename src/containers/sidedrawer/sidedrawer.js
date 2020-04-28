@@ -1,9 +1,8 @@
 import SideDrawer from "../../components/sidedrawer/sidedrawer";
 import { connect } from "react-redux";
-import axios from "axios";
 import { onGetFollowRequests } from "../../services/sidedrawer";
 import { onGetSignUpRequests } from "../../services/sidedrawer";
-const jwt = require("jsonwebtoken");
+
 const mapStateToProps = (state) => ({
   users: state.admin.users,
   toggle: state.admin.toggle,

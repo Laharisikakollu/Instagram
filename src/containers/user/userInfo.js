@@ -1,30 +1,28 @@
 import UserInfo from "../../components/user/userInfo";
 import { connect } from "react-redux";
-import axios from "axios";
-import {getUserFollowersAndFollowing} from '../../services/user';
-import {followAndUnFollow} from '../../services/user';
-import {onGetFollowRequests} from '../../services/user';
-const jwt = require("jsonwebtoken");
+import { getUserFollowersAndFollowing } from "../../services/user";
+import { followAndUnFollow } from "../../services/user";
+import { onGetFollowRequests } from "../../services/user";
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getUserFollowersAndFollowing: async (value) => {
-     let getUserfollowers=await getUserFollowersAndFollowing(value)
-     console.log(getUserfollowers)
+      let getUserfollowers = await getUserFollowersAndFollowing(value);
+
       dispatch({
         type: "GETUSERFOLLOWERSANDFOLLOWING",
-        payload:getUserfollowers,
+        payload: getUserfollowers,
       });
     },
 
     followAndUnFollow: async (value) => {
-      let followunfollow=await followAndUnFollow(value)
+      let followunfollow = await followAndUnFollow(value);
+
       dispatch({
         type: "FOLLOWANDUNFOLLOW",
-        payload:followunfollow,
+        payload: followunfollow,
       });
     },
-
 
     onNewSearch: (value) =>
       dispatch({
@@ -33,7 +31,8 @@ const mapDispatchToProps = (dispatch) => {
       }),
 
     onGetFollowRequests: async (value) => {
-     let getfollowrequest=await onGetFollowRequests(value)
+      let getfollowrequest = await onGetFollowRequests(value);
+
       dispatch({
         type: "GETFOLLOWREQUESTS",
         payload: getfollowrequest,

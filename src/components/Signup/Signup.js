@@ -44,7 +44,7 @@ class SignUp extends React.Component {
 
           isaccept: true,
         };
-        // await this.props.validate();
+       
         this.props.setItem(obj);
 
         if (!this.props.success) {
@@ -60,7 +60,7 @@ class SignUp extends React.Component {
           role: this.props.role,
           isaccept: null,
         };
-        // await this.props.validate();
+        
         this.props.setItem(obj);
       }
 

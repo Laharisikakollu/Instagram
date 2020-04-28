@@ -4,7 +4,7 @@ const initialState = {
   userPosts: "",
   description: "",
   followers: "",
-  following: "",
+  following: [],
   searchValue: "",
   likeCounter: "",
   followRequests: "",
@@ -30,10 +30,7 @@ const reducer = (state = initialState, action) => {
     }
 
     case "NEWDESCRIPTION": {
-      console.log("entered new descriprion");
-      console.log(action.payload);
       state.description = action.payload;
-      console.log(state.description);
       return {
         ...state,
         description: state.description,
@@ -61,7 +58,7 @@ const reducer = (state = initialState, action) => {
 
     case "GETFOLLOWREQUESTS": {
       let l = action.payload;
-      if (l) state.followRequests = l.followrequest;
+      if (l) {state.followRequests = l.followrequest;}
       return {
         ...state,
         localStorageData: JSON.parse(localStorage.getItem("token")),
@@ -87,6 +84,7 @@ const reducer = (state = initialState, action) => {
     }
 
     case "FOLLOWANDUNFOLLOW": {
+      
       return {
         ...state,
       };

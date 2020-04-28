@@ -1,11 +1,10 @@
 import Profile from "../../components/user/profile";
 import { connect } from "react-redux";
-import axios from "axios";
 import {getUserPosts} from '../../services/user';
 import {onLikePost} from '../../services/user';
 import {deletePost} from '../../services/user'
 
-const jwt = require("jsonwebtoken");
+
 
 const mapDispatchToProps = (dispatch) => {
   return {

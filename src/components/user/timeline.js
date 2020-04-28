@@ -10,7 +10,6 @@ import {
   Label,
   Input,
 } from "reactstrap";
-// import { Button } from 'reactstrap';
 import {
   Upload,
   Button,
@@ -64,6 +63,7 @@ class Timeline extends Component {
   componentWillMount() {
     const payload = jwt.decode(JSON.parse(localStorage.getItem("token")));
     this.props.getfollowerposts(payload.userName);
+    // await this.props.getUserPosts(this.props.userName);
   }
 
   handlePreview = async (file) => {
@@ -138,6 +138,7 @@ class Timeline extends Component {
       userId: payload.id,
     };
     await this.props.onLikePost(obj);
+    this.props.getfollowerposts(payload.userName);
   };
 
   showModal = (e) => {

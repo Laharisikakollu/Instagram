@@ -1,6 +1,5 @@
 import { connect } from "react-redux";
 import UserRequest from "../../components/admin/userRequest";
-import axios from "axios";
 import {onGetRequests} from '../../services/admin';
 import {accept} from '../../services/admin';
 import {decline} from '../../services/admin';

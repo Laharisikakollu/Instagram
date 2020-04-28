@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const initialState = {
   userName: "",
   password: "",

@@ -1,7 +1,4 @@
 import React, { Component } from "react";
-// import { Layout, Menu, Breadcrumb } from 'antd';
-// import { connect } from "react-redux";
-// const { Header, Content, Footer } = Layout;
 import axios from "axios";
 
 import { connect } from "react-redux";
@@ -42,7 +39,8 @@ class SearchPost extends Component {
   }
 
   componentDidMount() {
-    this.props.getUserPosts(this.state.searchValue);
+    this.props.getUserPosts(this.state.searchValue,this.props.following);
+   this.props.getUserFollowersAndFollowing(this.props.userName);
   }
 
   async componentWillMount() {
@@ -52,7 +50,7 @@ class SearchPost extends Component {
 
   componentDidUpdate = async (prevProps, prevState) => {
     if (prevProps.searchValue !== this.props.searchValue) {
-      await this.props.getUserPosts(this.props.searchValue);
+      await this.props.getUserPosts(this.props.searchValue,this.props.following);
     }
   };
 
@@ -64,7 +62,7 @@ class SearchPost extends Component {
   };
 
   handleSearch = async () => {
-    await this.props.getUserPosts(this.props.searchValue);
+    await this.props.getUserPosts(this.props.searchValue,this.props.following);
 
     this.setState({
       display: true,
@@ -72,13 +70,15 @@ class SearchPost extends Component {
   };
 
   handleLikePost = async (e) => {
+    let payload = jwt.decode(JSON.parse(localStorage.getItem("token")));
+
     let obj = {
       postId: e,
-      postUserName: this.props.searchValue,
-      presentUser: this.props.userName,
+      userId: payload.id,
     };
     await this.props.onLikePost(obj);
-    await this.props.getUserPosts(this.props.searchValue);
+    await this.props.getUserFollowersAndFollowing(payload.userName);
+    await this.props.getUserPosts(this.props.searchValue,this.props.following);
   };
 
   render() {
@@ -86,6 +86,7 @@ class SearchPost extends Component {
       <div>
         {this.state.display ? (
           <div>
+            {this.props.searchValue}
             {this.props.userPosts ? (
               <Container
                 style={{
@@ -103,6 +104,7 @@ class SearchPost extends Component {
                   from={"search"}
                   name={this.state.searchValue}
                 ></UserInfo>
+                
                 {this.props.userPosts.map((el, key) => {
                   return (
                     <div>

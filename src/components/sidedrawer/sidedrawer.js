@@ -1,6 +1,5 @@
 import React from "react";
 import { Switch, Route, Link } from "react-router-dom";
-
 import { Menu, Button, Drawer, notification } from "antd";
 import Logout from "../logout/logout";
 import {
@@ -58,7 +57,8 @@ class SideDrawer extends React.Component {
 
   componentDidMount = async () => {
     await this.props.setUserName(this.props.signeduserName);
-    if (this.props.role=== "user") {
+    console.log("roleeeeee",this.props.role)
+    if (this.props.role === "user") {
       await this.props.onGetFollowRequests(this.props.signeduserName);
       if (this.props.followRequests)
         await this.props.followRequests.map(async (el, key) => {
@@ -78,6 +78,7 @@ class SideDrawer extends React.Component {
           return notification.open({
             message: "New Sign Up Request  ",
             description: `from ${el}`,
+            icon: <BellOutlined style={{ color: "#308ee9" }} />,
           });
         });
       }

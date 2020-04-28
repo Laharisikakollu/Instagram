@@ -1,6 +1,5 @@
 import Login from "../../components/login/login";
 import { connect } from "react-redux";
-import axios from "axios";
 import {onSubmit} from '../../services/login'
 const mapDispatchToProps = (dispatch) => {
   return {

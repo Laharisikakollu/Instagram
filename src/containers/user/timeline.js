@@ -1,12 +1,11 @@
 import Timeline from "../../components/user/timeline";
 import { connect } from "react-redux";
-import axios from "axios";
 import {onLikePost} from '../../services/user';
 import {addComment} from '../../services/user';
 import {uploadPost} from '../../services/user';
 import {getComment} from '../../services/user';
 import {getfollowerposts} from '../../services/user';
-import { message } from "antd";
+
 const mapDispatchToProps = (dispatch) => {
   return {
     uploadPost: async (value) => {

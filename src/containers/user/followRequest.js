@@ -1,15 +1,14 @@
 import Followrequests from "../../components/user/followRequest";
 import { connect } from "react-redux";
-import axios from "axios";
 import {onGetFollowRequests} from '../../services/user';
 import {accept} from '../../services/user';
 import {decline} from '../../services/user'
-const jwt = require("jsonwebtoken");
+
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetFollowRequests: async (value) => {
-     let getfollowrequest=await onGetFollowRequests()
+     let getfollowrequest=await onGetFollowRequests(value)
       dispatch({
         type: "GETFOLLOWREQUESTS",
         payload:getfollowrequest,

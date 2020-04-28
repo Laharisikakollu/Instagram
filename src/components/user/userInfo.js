@@ -76,6 +76,7 @@ class UserInfo extends Component {
       ),
     });
   };
+ 
   componentWillMount = async () => {
     let str = window.location.pathname;
     let username = "";
@@ -86,19 +87,22 @@ class UserInfo extends Component {
       username = payload.userName;
     }
 
+    await this.props.followAndUnFollow(this.props.searchValue)
     await this.props.getUserFollowersAndFollowing(username);
     await this.handleUpdatingMenu();
     await this.props.onGetFollowRequests(this.props.searchValue);
   };
   componentDidUpdate = async (prevProps, prevState) => {
     if (prevProps.name !== this.props.name) {
+      await this.props.followAndUnFollow(this.props.searchValue)
+      await this.props.onGetFollowRequests(this.props.searchValue);
       await this.props.getUserFollowersAndFollowing(this.props.name);
       await this.handleUpdatingMenu();
-      await this.props.onGetFollowRequests(this.props.searchValue);
+      
+     
     }
   };
   handleFollow = async (myName) => {
-    await this.props.onGetFollowRequests(this.props.searchValue);
     if (
       !this.props.followRequests.find(
         (element) =>
@@ -106,17 +110,21 @@ class UserInfo extends Component {
           jwt.decode(JSON.parse(localStorage.getItem("token"))).userName
       )
     )
+   
       await this.props.followAndUnFollow(myName);
+      await this.props.onGetFollowRequests(myName);
+     
 
     await this.props.getUserFollowersAndFollowing(this.props.name);
     await this.handleUpdatingMenu();
+        
+
   };
 
   render() {
     return (
       <div>
         <Container style={{ border: "2px solid" }}>
-          {this.props.searchValue}
           {this.props.followers && this.props.following ? (
             <Row gutter={16}>
               <Col span={12}>

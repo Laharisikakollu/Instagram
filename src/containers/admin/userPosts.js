@@ -1,8 +1,7 @@
 import { connect } from "react-redux";
 import UserPosts from "../../components/admin/userPosts";
-import axios from "axios";
 import {getUserPosts} from '../../services/user';
-const jwt = require("jsonwebtoken");
+
 
 
 const mapStateToProps = (state) => ({

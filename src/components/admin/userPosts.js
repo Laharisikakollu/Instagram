@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-// import SideDrawer from "../sidedrawer/sidedrawer";
-import UserInfo from '../../containers/user/userInfo';
 import Profile from "../../containers/user/profile";
 class UserPosts extends Component {
   constructor(props) {

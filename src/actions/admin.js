@@ -1,0 +1,7 @@
+export const GETUSERS='GETUSERS';
+export const TOGGLEUSER='TOGGLEUSER';
+export const GETUSERPOSTS='GETUSERPOSTS';
+export const SETUSERNAME='SETUSERNAME';
+export const GETREQUESTS='GETREQUESTS';
+export const ACCEPT='ACCEPT';
+export const REJECT='REJECT';
