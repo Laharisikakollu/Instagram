@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
-import Signup from "./containers/Signup/signup";
-import Login from "./containers/login/login";
+import Signup from "./components/Signup/Signup";
+import Login from "./components/login/login";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import userList from "./containers/admin/userList";
 import { Provider } from "react-redux";
@@ -13,7 +13,7 @@ import SideDrawer from "./containers/sidedrawer/sidedrawer";
 const store = createStore(reducer);
 function App() {
   return (
-    <Provider store={store}>
+    
       <Router>
         <div className="App">
           <Switch>
@@ -31,7 +31,7 @@ function App() {
           </Switch>
         </div>
       </Router>
-    </Provider>
+    
   );
 }
 

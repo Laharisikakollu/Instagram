@@ -1,92 +1,137 @@
-import React from "react";
+import React, { useState,useEffect } from "react";
+import {useSelector, useDispatch} from 'react-redux';
 import "antd/dist/antd.css";
 import { Button } from "antd";
 import { Link } from "react-router-dom";
+import {onNameChange} from '../../actions/signup';
+import {onPasswordChange} from '../../actions/signup';
+import {setItems} from '../../actions/signup';
+import {setItem} from '../../services/signup';
 import "./signup.css";
 import {
   Form,
   Input,
-  DatePicker,
-  TimePicker,
-  Select,
-  Cascader,
-  InputNumber,
+  Select
 } from "antd";
 import { Menu, Dropdown } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
-class SignUp extends React.Component {
-  state = {
-    submit: false,
-    toggle: true,
+const SignUp =(props)=> {
+
+  const [submit, setSubmit] = useState(false);
+  const [toggle, setToggle] = useState(true);
+  const [userNameValidated,setuserNameValidated]=useState("");
+  const [passwordValidated,setPasswordValidated]=useState("");
+  const [email,setEmail]=useState("");
+  const [emailValidated,setEmailValidated]=useState("");
+  const [phone,setPhone]=useState("");
+  const [phoneValidated,setPhoneValidated]=useState("");
+  const [role,setRole]=useState("");
+  const [roleValidated,setRoleValidated]=useState("");
+
+  const userName = useSelector(state => state.signUp.userName)
+  const password = useSelector(state => state.signUp.password)
+  
+ 
+  const dispatch = useDispatch()
+
+  const handleChange = (e) => {
+    let success = "success";
+    if (
+     e.target.value.length < 4 ||
+     e.target.value.length > 30 ||
+      !/^[A-Z0-9_-]{3,30}$/i.test(e.target.value)
+    ) {
+      success = "warning";
+    }
+   dispatch(onNameChange({userName:e.target.value}));
+   setuserNameValidated(success)
   };
-  handleChange = (e) => {
-    this.props.onNameChange(e.target.value);
+  const handlePassword = (e) => {
+    let success = "success";
+    if (!e.target.value || e.target.value.length < 5) {
+      success = "warning";
+    }
+   dispatch(onPasswordChange({password:e.target.value}));
+   setPasswordValidated(success)
   };
-  handlePassword = (e) => {
-    this.props.onPasswordChange(e.target.value);
-  };
-  handleSubmit = async () => {
+  const handleSubmit = async () => {
+    console.log(userName,password,"names")
     let obj = {};
     if (
-      (this.props.userName !== null || this.props.userName !== "") &&
-      (this.props.password !== null || this.props.password !== "")
+      (userName !== null || userName !== "") &&
+      (password !== null || password !== "")
     ) {
       
-      if (this.props.role === "admin") {
+      if (role === "admin") {
         obj = {
-          userName: this.props.userName,
-          password: this.props.password,
-          email: this.props.email,
-          phone: this.props.phone,
-          role: this.props.role,
-
+          userName: userName.userName,
+          password: password.password,
+          email: email,
+          phone: phone,
+          role: role,
           isaccept: true,
         };
-       
-        this.props.setItem(obj);
+      
+       await setItem(obj)
 
-        if (!this.props.success) {
+        if (!props.success) {
           alert("Not valid User");
           return;
         }
       } else {
         obj = {
-          userName: this.props.userName,
-          password: this.props.password,
-          email: this.props.email,
-          phone: this.props.phone,
-          role: this.props.role,
+          userName: userName.userName,
+          password: password.password,
+          email: email,
+          phone: phone,
+          role: role,
           isaccept: null,
         };
-        
-        this.props.setItem(obj);
+        await setItem(obj)
       }
 
       alert("Signup successful", 1000);
-      this.setState({ submit: true, toggle: false });
+      setSubmit(true)
+      setToggle(false)
     } else {
       alert("enter username and password", 3000);
     }
   };
-  handleLogout = () => {
-    this.setState({ submit: false, toggle: true });
-    this.props.onLogout();
-    alert("logout successful", 1000);
-  };
-  handleEmail = (e) => {
-    this.props.setEmail(e.target.value);
-  };
-  handlePhone = (e) => {
-    this.props.setPhone(e.target.value);
+
+  
+
+ 
+  const handleEmail = (e) => {
+    let success = "success";
+    if (!e.target.value || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(e.target.value)) {
+      success = "warning";
+    }
+   setEmail(e.target.value);
+   setEmailValidated(success)
   };
 
-  handleRole = (e) => {
-    this.props.setRole(e);
+
+  const handlePhone = (e) => {
+    let success = "success";
+    if (!/^\d{10}$/.test(e.target.value)) {
+      success = "warning";
+    }
+   setPhone(e.target.value);
+   setPhoneValidated(success)
   };
 
-  render() {
+  const handleRole = (e) => {
+    let success = "success";
+    if (!e) {
+      success = "warning";
+    }
+    setRole(e);
+    setRoleValidated(success)
+  };
+
+  
     const formItemLayout = {
       labelCol: {
         xs: {
@@ -111,7 +156,7 @@ class SignUp extends React.Component {
           key="0"
           value="admin"
           id="admin"
-          onClick={() => this.handleRole("admin")}
+          onClick={() => handleRole("admin")}
         >
           Admin
         </Menu.Item>
@@ -120,7 +165,7 @@ class SignUp extends React.Component {
           key="1"
           value="user"
           id="user"
-          onClick={() => this.handleRole("user")}
+          onClick={() => handleRole("user")}
         >
           User
         </Menu.Item>
@@ -128,14 +173,14 @@ class SignUp extends React.Component {
     );
     return (
       <div>
-        {this.state.toggle ? (
+        {toggle ? (
           <div>
             <Form {...formItemLayout}>
               <h1 className="h1">Sign Up</h1>
               <Form.Item
-                onChange={this.handleChange}
+                onChange={handleChange}
                 label="Username"
-                validateStatus={this.props.userNameValidated}
+                validateStatus={userNameValidated}
                 help="Should be between 4 to 30 characters"
                 hasFeedback
               >
@@ -143,10 +188,10 @@ class SignUp extends React.Component {
               </Form.Item>
 
               <Form.Item
-                onChange={this.handlePassword}
-                value={this.props.password}
+                onChange={handlePassword}
+                value={password}
                 label="Password"
-                validateStatus={this.props.passwordValidated}
+                validateStatus={passwordValidated}
                 help="Atleast 8 characters"
                 hasFeedback
               >
@@ -154,10 +199,10 @@ class SignUp extends React.Component {
               </Form.Item>
 
               <Form.Item
-                onChange={this.handleEmail}
-                value={this.props.email}
+                onChange={handleEmail}
+                value={email}
                 label="Email"
-                validateStatus={this.props.emailValidated}
+                validateStatus={emailValidated}
                 help="Should contain characters "
                 hasFeedback
               >
@@ -165,10 +210,10 @@ class SignUp extends React.Component {
               </Form.Item>
 
               <Form.Item
-                onChange={this.handlePhone}
-                value={this.props.phone}
+                onChange={handlePhone}
+                value={phone}
                 label="Phonenumber"
-                validateStatus={this.props.phoneValidated}
+                validateStatus={phoneValidated}
                 help="Should be length of 10 only numbers allowed"
                 hasFeedback
               >
@@ -178,8 +223,8 @@ class SignUp extends React.Component {
               <Form.Item label="Role">
                 <Dropdown overlay={menu} trigger={["click"]}>
                   <Button>
-                    {this.props.roleValidated === "success" ? (
-                      this.props.role
+                    {roleValidated === "success" ? (
+                      role
                     ) : (
                       <div>
                         Role <DownOutlined />
@@ -192,7 +237,7 @@ class SignUp extends React.Component {
               <Form.Item>
                 <Button
                   className="signup"
-                  onClick={this.handleSubmit}
+                  onClick={handleSubmit}
                   type="primary"
                   size="middle"
                 >
@@ -211,6 +256,6 @@ class SignUp extends React.Component {
       </div>
     );
   }
-}
+
 
 export default SignUp;

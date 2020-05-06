@@ -12,15 +12,15 @@ import reducer from './reducers/index';
 import { createStore } from 'redux';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createBrowserHistory } from 'history';
-// const store = createStore(reducer);
+const store = createStore(reducer);
 const history = createBrowserHistory();
 ReactDOM.render(
     
       
-     
+     <Provider store={store}>
       <App />
      
-      
+      </Provider> 
     
   ,
   document.getElementById('root')

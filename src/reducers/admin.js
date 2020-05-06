@@ -1,3 +1,4 @@
+
 const initialState = {
   userName: "",
   password: "",
@@ -5,7 +6,6 @@ const initialState = {
   localStorageData: "",
   success: "",
   requests: "",
-  users: "",
   toggle: false,
 };
 
@@ -63,24 +63,6 @@ const reducer = (state = initialState, action) => {
       };
     }
 
-    case "ACCEPT": {
-      return {
-        ...state,
-      };
-    }
-
-    case "REJECT": {
-      return {
-        ...state,
-      };
-    }
-
-    case "GETUSERS": {
-      state.users = action.payload;
-      return {
-        ...state,
-      };
-    }
 
     default:
       return state;

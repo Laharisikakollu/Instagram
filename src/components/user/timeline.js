@@ -94,6 +94,8 @@ class Timeline extends Component {
       uploading: true,
     });
 
+    console.log("fileList",fileList)
+
     await this.props.uploadDescription(this.state.newPostName);
     await this.props.uploadPost({
       fileList,

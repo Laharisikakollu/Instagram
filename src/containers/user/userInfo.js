@@ -17,7 +17,6 @@ const mapDispatchToProps = (dispatch) => {
 
     followAndUnFollow: async (value) => {
       let followunfollow = await followAndUnFollow(value);
-
       dispatch({
         type: "FOLLOWANDUNFOLLOW",
         payload: followunfollow,

@@ -9,17 +9,17 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "USERNAMECHANGE": {
-      state.userName = action.payload;
+      // state.userName = action.payload;
       return {
         ...state,
-        userName: action.payload,
+        userName: action.payload.userName,
       };
     }
 
     case "PASSWORDCHANGE": {
       return {
         ...state,
-        password: action.payload,
+        password: action.payload.password,
       };
     }
     case "SUBMIT": {

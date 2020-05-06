@@ -1,40 +1,61 @@
-import React, { Component } from "react";
+import React, { useState,useEffect } from "react";
+import {useSelector, useDispatch} from 'react-redux';
 import { Form, Input, Button, Checkbox, Switch } from "antd";
+import {onNameChange} from '../../actions/signup';
+import {onPasswordChange} from '../../actions/signup';
+import {setUserName} from '../../actions/login';
+import {onSubmit} from '../../services/login';
+import {onSubmits} from '../../actions/login';
 import { Redirect } from "react-router";
 import "./login.css";
-class Login extends Component {
-  onFinish = async (values) => {
-    await this.props.onSubmit(this.props.userName, this.props.password);
-    if (!this.props.uSuccess) {
+const Login =(props) => {
+
+
+  const userName = useSelector(state => state.login.userName)
+  const password = useSelector(state => state.login.password)
+  const role = useSelector(state => state.login.role)
+  const uSuccess = useSelector(state => state.login.uSuccess)
+  const pSuccess = useSelector(state => state.login.pSuccess)
+  const success = useSelector(state => state.login.success)
+  
+console.log(userName,password,"log")
+console.log(role,"role")
+  const dispatch = useDispatch()
+
+  const onFinish = async (values) => {
+    let submit=await onSubmit(userName,password)
+    console.log(submit)
+      dispatch(onSubmits(submit))
+    if (uSuccess===false) {
       alert("Username does not exist");
       return;
     }
-    if (!this.props.pSuccess) {
+    if (pSuccess===false) {
       alert("Password Incorrect");
       return;
     }
-    if (!this.props.success) {
+    if (success === "") {
       alert("Admin didn't accept");
       return;
     }
     alert("Successfully Logged in");
-    this.props.setUserName(this.props.userName);
-    if (this.props.role === "user") {
-      this.props.setUserUserName(this.props.userName);
+   dispatch(setUserName(userName))
+    if (role === "user") {
+      dispatch(setUserName(userName))
     }
   };
 
-  onFinishFailed = (errorInfo) => {
+  const onFinishFailed = (errorInfo) => {
     alert("Failed:", errorInfo);
   };
 
-  handleNameChange = (e) => {
-    this.props.onNameChange(e.target.value);
+  const handleNameChange = (e) => {
+    dispatch(onNameChange(e.target.value));
   };
-  handlePasswordChange = (e) => {
-    this.props.onPasswordChange(e.target.value);
+  const handlePasswordChange = (e) => {
+    dispatch(onPasswordChange(e.target.value));
   };
-  render() {
+  
     const layout = {
       labelCol: {
         span: 8,
@@ -51,11 +72,11 @@ class Login extends Component {
     };
     return (
       <div>
-        {this.props.success ? (
-          this.props.role === "admin" ? (
+        {success ? (
+          role === "admin" ? (
             <Redirect to="/admin"></Redirect>
           ) : (
-            <Redirect to={`/user/${this.props.userName}`}></Redirect>
+            <Redirect to={`/user/${userName}`}></Redirect>
           )
         ) : (
           <div
@@ -74,14 +95,14 @@ class Login extends Component {
               initialValues={{
                 remember: true,
               }}
-              onFinish={this.onFinish}
-              onFinishFailed={this.onFinishFailed}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
             >
               <div className="insta-icon"></div>
               <h1 className="h1">LOG IN</h1>
 
               <Form.Item
-                onChange={this.handleNameChange}
+                onChange={handleNameChange}
                 label="Username"
                 name="username"
                 rules={[
@@ -103,7 +124,7 @@ class Login extends Component {
                     message: "Please enter your password!",
                   },
                 ]}
-                onChange={this.handlePasswordChange}
+                onChange={handlePasswordChange}
               >
                 <Input.Password />
               </Form.Item>
@@ -127,5 +148,5 @@ class Login extends Component {
       </div>
     );
   }
-}
+
 export default Login;

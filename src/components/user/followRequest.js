@@ -17,6 +17,7 @@ class FollowRequests extends Component {
     };
 
     await this.props.accept(obj);
+    // console.log(this.props.userName,"follow")
     await this.props.onGetFollowRequests(this.props.userName);
   };
   onDeclineChange = async (e) => {

@@ -150,7 +150,6 @@ class SearchPost extends Component {
           </div>
         ) : (
           <div>
-            {" "}
             <Input
               placeholder="Search user"
               value={this.searchValue}

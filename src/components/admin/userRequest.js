@@ -1,31 +1,58 @@
-import React, { Component } from "react";
+import React, { Component,useEffect } from "react";
+
+import {useSelector, useDispatch} from 'react-redux';
 import { Checkbox } from "antd";
 import { Table } from "reactstrap";
-class UserRequest extends Component {
-  async componentWillMount() {
-    await this.props.onGetRequests();
-  }
+import {onGetRequests} from '../../services/admin';
+import {accept} from '../../services/admin';
+import {decline} from '../../services/admin';
+import {accepts} from '../../actions/admin';
+import {declines} from '../../actions/admin';
+import { getRequests} from '../../actions/admin';
+const UserRequest =(props)=> {
 
-  Accept = async (e) => {
+
+  const requests = useSelector(state => state.admin.requests)
+
+  const dispatch = useDispatch()
+
+  const getRequest = async ()=>{
+    let requests = await onGetRequests()
+    dispatch(getRequests(requests))
+    return requests
+   }
+   
+    useEffect(() => {
+      getRequest()
+    },[]);
+  
+
+
+  const Accept = async (e) => {
     let obj = {
       userName: e.target.id,
       value: e.target.checked,
     };
 
-    await this.props.accept(obj);
-    await this.props.onGetRequests();
+      await accept(obj);
+    // await dispatch(accepts(acceptRequest));
+    let getrequests=await onGetRequests()
+    await dispatch(getRequests(getrequests));
+  
   };
 
-  Reject = async (e) => {
+  const Reject = async (e) => {
     let obj = {
       userName: e.target.id,
       value: e.target.checked,
     };
 
-    await this.props.decline(obj);
-    await this.props.onGetRequests();
+      await decline(obj);
+    // await dispatch(declines(declineRequest));
+    let getrequests=await onGetRequests()
+    await dispatch(getRequests(getrequests));
   };
-  render() {
+
     return (
       <div>
         <h1>USER REQUESTS</h1>
@@ -39,16 +66,16 @@ class UserRequest extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.requests
-              ? this.props.requests.map((el, key) => {
+            {requests
+              ? requests.map((el, key) => {
                   return (
                     <tr>
                       <td>{el}</td>
                       <td>
-                        <Checkbox onChange={this.Accept} id={el}></Checkbox>
+                        <Checkbox onChange={Accept} id={el}></Checkbox>
                       </td>
                       <td>
-                        <Checkbox onChange={this.Reject} id={el}></Checkbox>
+                        <Checkbox onChange={Reject} id={el}></Checkbox>
                       </td>
                     </tr>
                   );
@@ -59,5 +86,5 @@ class UserRequest extends Component {
       </div>
     );
   }
-}
+
 export default UserRequest;

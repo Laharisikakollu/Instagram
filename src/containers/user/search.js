@@ -22,7 +22,7 @@ const mapDispatchToProps = (dispatch) => {
           })
         }
        
-        if(index > 0)
+        if(index >= 0)
         {
          
           getPost = await getUserPosts(value);

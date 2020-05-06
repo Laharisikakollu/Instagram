@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Table } from "reactstrap";
+import React, { useState,useEffect } from "react";
+import {useSelector, useDispatch} from 'react-redux';
 import {
   BrowserRouter as Router,
   Route,
@@ -7,38 +7,44 @@ import {
   Switch,
   Redirect,
 } from "react-router-dom";
-import { Button } from "antd";
-import UserPosts from "../../containers/admin/userPosts";
+import UserPosts from './userPosts';
+import {onGetUsers} from '../../services/admin';
+import {onChangeToggle} from '../../actions/admin';
 
-class UserList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      toggle: false,
-    };
-  }
 
-  componentDidMount() {
-    this.props.onGetUsers();
-  }
+const UserList=(props)=>{
+ 
+  const [users, setUsers] = useState([])
+  const toggle = useSelector(state => state.admin.toggle)
+  
 
-  hideUserLinks = () => {
-    this.props.onChangeToggle();
-    this.setState({ toggle: !this.state.toggle });
+  const dispatch = useDispatch()
+
+ const getusers = async ()=>{
+  let getusers = await onGetUsers()
+  setUsers(getusers)
+  // return getusers
+ }
+ 
+  useEffect(() => {
+    getusers()
+  },[]);
+
+  const hideUserLinks = () => {
+    dispatch(onChangeToggle())
   };
-
-  render() {
+  
     return (
       <div>
-        {!this.props.toggle ? (
+        {!toggle ? (
           <div>
             <h1>User List</h1>
-            {this.props.users
-              ? this.props.users.map((el, index) => {
+            {users
+              ? users.map((el, index) => {
                   return (
                     <div key={index}>
                       <Link
-                        onClick={this.hideUserLinks}
+                        onClick={hideUserLinks}
                         to={{ pathname: `/admin/userList/${el}` }}
                       >
                         {el}
@@ -58,6 +64,6 @@ class UserList extends Component {
       </div>
     );
   }
-}
+
 
 export default UserList;

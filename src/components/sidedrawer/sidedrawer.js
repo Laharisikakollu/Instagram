@@ -13,8 +13,8 @@ import {
   BellOutlined,
 } from "@ant-design/icons";
 import "antd/dist/antd.css";
-import UserList from "../../containers/admin/userList";
-import UserRequest from "../../containers/admin/userRequest";
+import UserList from "../admin/userList";
+import UserRequest from "../admin/userRequest";
 import UserTimeline from "../../containers/user/timeline";
 import UserProfile from "../../containers/user/profile";
 import UserSearch from "../../containers/user/search";
@@ -42,7 +42,10 @@ class SideDrawer extends React.Component {
   };
 
   hideUserLinks = () => {
-    if (this.state.visible === this.props.toggle) this.props.onChangeToggle();
+    console.log("toggleeeeeeee",this.props.toggle)
+    console.log(this.state.visible,"visible")
+    if (this.state.visible === this.props.toggle) this.props.onChangeToggle()
+    console.log(this.props.toggle,"aftertoggle")
   };
 
   sleep = async (time) => {

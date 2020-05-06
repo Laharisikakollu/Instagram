@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 export const onSubmit = async (userName, password) => {
   try {
+    console.log(userName,password)
     let res = await axios.post("http://localhost:8000/login", {
       userName: userName,
       password: password,

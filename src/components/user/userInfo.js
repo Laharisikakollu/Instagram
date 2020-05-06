@@ -87,14 +87,13 @@ class UserInfo extends Component {
       username = payload.userName;
     }
 
-    await this.props.followAndUnFollow(this.props.searchValue)
+  
     await this.props.getUserFollowersAndFollowing(username);
     await this.handleUpdatingMenu();
     await this.props.onGetFollowRequests(this.props.searchValue);
   };
   componentDidUpdate = async (prevProps, prevState) => {
     if (prevProps.name !== this.props.name) {
-      await this.props.followAndUnFollow(this.props.searchValue)
       await this.props.onGetFollowRequests(this.props.searchValue);
       await this.props.getUserFollowersAndFollowing(this.props.name);
       await this.handleUpdatingMenu();

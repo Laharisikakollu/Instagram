@@ -1,14 +1,14 @@
 const initialState = {
   userName: "",
   password: "",
-  role: "",
-  email: "",
-  phone: "",
+  // role: "",
+  // email: "",
+  // phone: "",
   localStorageData: "",
-  success: "",
-  userNameValidated: "",
-  passwordValidated: "",
-  roleValidated: "",
+  // success: "",
+  // userNameValidated: "",
+  // passwordValidated: "",
+  // roleValidated: "",
 };
 
 const reducer = (state = initialState, action) => {
@@ -16,7 +16,7 @@ const reducer = (state = initialState, action) => {
     case "USERNAMECHANGE": {
       return {
         ...state,
-        userNameValidated: action.payload.success,
+        // userNameValidated: action.payload.success,
         userName: action.payload.userName,
       };
     }
@@ -24,7 +24,7 @@ const reducer = (state = initialState, action) => {
     case "PASSWORDCHANGE": {
       return {
         ...state,
-        passwordValidated: action.payload.success,
+        // passwordValidated: action.payload.success,
         password: action.payload.password,
       };
     }
@@ -48,29 +48,29 @@ const reducer = (state = initialState, action) => {
       };
     }
 
-    case "EMAIL": {
-      return {
-        ...state,
-        emailValidated: action.payload.success,
-        email: action.payload.email,
-      };
-    }
+    // case "EMAIL": {
+    //   return {
+    //     ...state,
+    //     emailValidated: action.payload.success,
+    //     email: action.payload.email,
+    //   };
+    // }
 
-    case "PHONE": {
-      return {
-        ...state,
-        phoneValidated: action.payload.success,
-        phone: action.payload.phone,
-      };
-    }
+    // case "PHONE": {
+    //   return {
+    //     ...state,
+    //     phoneValidated: action.payload.success,
+    //     phone: action.payload.phone,
+    //   };
+    // }
 
-    case "ROLE": {
-      return {
-        ...state,
-        roleValidated: action.payload.success,
-        role: action.payload.role,
-      };
-    }
+    // case "ROLE": {
+    //   return {
+    //     ...state,
+    //     roleValidated: action.payload.success,
+    //     role: action.payload.role,
+    //   };
+    // }
 
     default:
       return state;

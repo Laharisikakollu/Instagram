@@ -16,7 +16,8 @@ export const onGetFollowRequests = async (value) => {
 
 export const accept = async (value) => {
   try {
-    value = { ...value, token: JSON.parse(localStorage.getItem("token")) };
+     let payload=jwt.decode(JSON.parse(localStorage.getItem("token")))
+    value = { ...value,id: payload.id };
     let res = await axios.post(
       `http://localhost:8000/acceptfollowrequest`,
       value
@@ -29,7 +30,8 @@ export const accept = async (value) => {
 
 export const decline = async (value) => {
   try {
-    value = { ...value, token: JSON.parse(localStorage.getItem("token")) };
+    let payload=jwt.decode(JSON.parse(localStorage.getItem("token")))
+    value = { ...value, id: payload.id };
 
     let res = await axios.post(
       `http://localhost:8000/declinefollowrequest`,
@@ -114,8 +116,9 @@ export const getfollowerposts = async (value) => {
 
 export const uploadPost = async (value) => {
   try {
+    let payload=jwt.decode(JSON.parse(localStorage.getItem("token")))
     let res = await axios.post("http://localhost:8000/addPost", {
-      token: JSON.parse(localStorage.getItem("token")),
+      token: payload.id,
       description: value.description,
       imageList: value.fileList,
     });
